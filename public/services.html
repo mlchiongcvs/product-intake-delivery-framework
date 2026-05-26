@@ -4,9 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HCD Services — Aetna Medicaid Product Intake Framework</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     /* ── Reset & Base ─────────────────────────────────────────── */
@@ -29,12 +26,11 @@
       --bg-off:       #F7F7F7;
       --bg-alt:       #F2F2F2;
       --radius-sm:    6px;
-      --radius-md:    10px;
-      --radius-lg:    16px;
-      --shadow-sm:    0 1px 3px rgba(0,0,0,0.08);
-      --shadow-md:    0 4px 16px rgba(0,0,0,0.08);
-      --font:         'DM Sans', system-ui, sans-serif;
-      --font-display: 'DM Serif Display', Georgia, serif;
+      --radius-md:    8px;
+      --radius-lg:    10px;
+      --shadow-sm:    none;
+      --shadow-md:    none;
+      --font:         'Segoe UI', system-ui, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -50,48 +46,29 @@
 
     /* ── Page Header ─────────────────────────────────────────── */
     .page-header {
-      background: var(--violet);
+      background: linear-gradient(135deg, #5C2E72 0%, #7D3F98 100%);
       color: #fff;
-      padding: 3rem 2rem 2.5rem;
+      padding: 20px 28px 0;
       position: relative;
-      overflow: hidden;
     }
-    .page-header::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 320px; height: 320px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      pointer-events: none;
-    }
-    .page-header::after {
-      content: '';
-      position: absolute;
-      bottom: -80px; left: 30%;
-      width: 240px; height: 240px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.04);
-      pointer-events: none;
-    }
-    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; padding-bottom: 0; }
     .header-eyebrow {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--violet-mid);
-      margin-bottom: 10px;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7);
+      margin-bottom: 2px;
     }
     .header-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 400;
-      line-height: 1.15;
-      margin-bottom: 14px;
+      font-family: var(--font);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 4px;
     }
-    .header-title em { font-style: italic; opacity: 0.85; }
+    .header-title em { font-style: normal; }
     .header-desc {
-      font-size: 15px; color: rgba(255,255,255,0.8);
-      max-width: 600px; line-height: 1.65;
-      margin-bottom: 1.75rem;
+      font-size: 13px; color: rgba(255,255,255,0.8);
+      max-width: 600px; line-height: 1.5;
+      margin-bottom: 20px;
     }
     .header-pills { display: flex; flex-wrap: wrap; gap: 8px; }
     .header-pill {
@@ -104,10 +81,10 @@
 
     /* ── Inner Nav ───────────────────────────────────────────── */
     .inner-nav {
-      background: var(--bg);
-      border-bottom: 1px solid var(--border-lite);
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: var(--shadow-sm);
+      background: transparent;
+      border-bottom: none;
+      position: relative;
+      z-index: 100;
     }
     .inner-nav-wrap {
       max-width: 1100px; margin: 0 auto;
@@ -117,21 +94,22 @@
     .inner-nav-wrap::-webkit-scrollbar { display: none; }
     .nav-tab {
       flex-shrink: 0;
-      padding: 14px 22px;
-      font-size: 13px; font-weight: 500;
-      color: var(--muted);
+      padding: 10px 18px;
+      font-size: 13px; font-weight: 400;
+      color: rgba(255,255,255,0.8);
       cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.15s;
       white-space: nowrap;
-      background: none; border-left: none; border-right: none; border-top: none;
+      background: transparent;
       font-family: var(--font);
     }
-    .nav-tab:hover { color: var(--violet); }
-    .nav-tab.active { color: var(--violet); border-bottom-color: var(--violet); }
+    .nav-tab:hover { color: #fff; }
+    .nav-tab.active { color: var(--violet); background: #fff; font-weight: 700; }
 
     /* ── Main Layout ─────────────────────────────────────────── */
-    .main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 24px 28px; }
 
     /* ── Section Titles ──────────────────────────────────────── */
     .section { display: none; }
@@ -143,8 +121,8 @@
       margin-bottom: 6px;
     }
     .section-title {
-      font-family: var(--font-display);
-      font-size: 1.75rem; font-weight: 400;
+      font-family: var(--font);
+      font-size: 18px; font-weight: 700;
       color: var(--dark); margin-bottom: 10px;
     }
     .section-desc {
@@ -200,7 +178,6 @@
     }
     .service-card:hover {
       border-color: var(--violet-mid);
-      box-shadow: var(--shadow-md);
     }
     .service-name {
       font-size: 13.5px; font-weight: 600;
@@ -324,7 +301,6 @@
       border: 1px solid var(--border-lite);
       border-radius: var(--radius-lg);
       overflow: hidden;
-      box-shadow: var(--shadow-md);
     }
     .output-card.visible { display: block; }
     .output-card-header {
@@ -427,8 +403,8 @@
       .intake-grid { grid-template-columns: 1fr; }
       .filter-bar { flex-direction: column; }
       .filter-select { min-width: 100%; }
-      .page-header { padding: 2rem 1.25rem; }
-      .main { padding: 1.5rem 1.25rem 3rem; }
+      .page-header { padding: 16px 16px 0; }
+      .main { padding: 16px; }
     }
   </style>
 </head>
@@ -450,17 +426,16 @@
       <span class="header-pill">Project Intake Tool</span>
       <span class="header-pill">Decision Guide</span>
     </div>
+    <!-- ── INNER NAV ── -->
+    <nav class="inner-nav" aria-label="Services sections">
+      <div class="inner-nav-wrap">
+        <button class="nav-tab active" data-section="overview">Services overview</button>
+        <button class="nav-tab" data-section="intake">Project intake</button>
+        <button class="nav-tab" data-section="guide">Decision guide</button>
+      </div>
+    </nav>
   </div>
 </header>
-
-<!-- ── INNER NAV ────────────────────────────────────────────────────────── -->
-<nav class="inner-nav" aria-label="Services sections">
-  <div class="inner-nav-wrap">
-    <button class="nav-tab active" data-section="overview">Services overview</button>
-    <button class="nav-tab" data-section="intake">Project intake</button>
-    <button class="nav-tab" data-section="guide">Decision guide</button>
-  </div>
-</nav>
 
 <!-- ── MAIN CONTENT ─────────────────────────────────────────────────────── -->
 <main class="main">
