@@ -181,7 +181,7 @@ export default function App() {
               border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
             }}>{t}</button>
           ))}
-          <a href="/services.html" style={{
+          <a href={`${import.meta.env.BASE_URL}services.html`} style={{
             padding:'10px 18px', fontSize:13, fontWeight:400,
             color:'rgba(255,255,255,0.8)', background:'transparent',
             border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
