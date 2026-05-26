@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HCD Services — Aetna Medicaid Product Intake Framework</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --violet:       #7D3F98;
+      --violet-dark:  #5a2b73;
+      --violet-mid:   #AC89BB;
+      --violet-lite:  #F3EBF8;
+      --violet-xlt:   #FAF5FC;
+      --teal:         #49A7A0;
+      --teal-lite:    #E1F5EE;
+      --dark:         #262626;
+      --mid:          #575757;
+      --muted:        #767676;
+      --border:       #CCCCCC;
+      --border-lite:  #E9E9E9;
+      --bg:           #FFFFFF;
+      --bg-off:       #F7F7F7;
+      --bg-alt:       #F2F2F2;
+      --radius-sm:    6px;
+      --radius-md:    10px;
+      --radius-lg:    16px;
+      --shadow-sm:    0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md:    0 4px 16px rgba(0,0,0,0.08);
+      --font:         'DM Sans', system-ui, sans-serif;
+      --font-display: 'DM Serif Display', Georgia, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      font-size: 15px;
+      color: var(--dark);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Page Header ─────────────────────────────────────────── */
+    .page-header {
+      background: var(--violet);
+      color: #fff;
+      padding: 3rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 30%;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+      pointer-events: none;
+    }
+    .header-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+    .header-eyebrow {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--violet-mid);
+      margin-bottom: 10px;
+    }
+    .header-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+    .header-title em { font-style: italic; opacity: 0.85; }
+    .header-desc {
+      font-size: 15px; color: rgba(255,255,255,0.8);
+      max-width: 600px; line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+    .header-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .header-pill {
+      font-size: 12px; font-weight: 500;
+      padding: 5px 14px; border-radius: 20px;
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ── Inner Nav ───────────────────────────────────────────── */
+    .inner-nav {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border-lite);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .inner-nav-wrap {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; gap: 0; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .inner-nav-wrap::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex-shrink: 0;
+      padding: 14px 22px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+      white-space: nowrap;
+      background: none; border-left: none; border-right: none; border-top: none;
+      font-family: var(--font);
+    }
+    .nav-tab:hover { color: var(--violet); }
+    .nav-tab.active { color: var(--violet); border-bottom-color: var(--violet); }
+
+    /* ── Main Layout ─────────────────────────────────────────── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+    /* ── Section Titles ──────────────────────────────────────── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .section-eyebrow {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--violet);
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.75rem; font-weight: 400;
+      color: var(--dark); margin-bottom: 10px;
+    }
+    .section-desc {
+      font-size: 14px; color: var(--mid);
+      max-width: 680px; line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    /* ── ① SERVICES OVERVIEW ────────────────────────────────── */
+    .phase-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+    .phase-btn {
+      padding: 7px 16px; border-radius: 20px;
+      font-size: 12.5px; font-weight: 500;
+      border: 1px solid var(--border);
+      background: var(--bg); color: var(--muted);
+      cursor: pointer; transition: all 0.15s;
+      font-family: var(--font);
+    }
+    .phase-btn:hover { border-color: var(--violet-mid); color: var(--violet); }
+    .phase-btn.active { background: var(--violet); color: #fff; border-color: var(--violet); }
+
+    .phase-panel { display: none; }
+    .phase-panel.active { display: block; }
+
+    .phase-header {
+      display: flex; align-items: flex-start; gap: 16px;
+      padding: 1.25rem 1.5rem;
+      background: var(--violet-lite);
+      border-left: 3px solid var(--violet);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: 1.25rem;
+    }
+    .phase-header-icon {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--violet); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .phase-header-name { font-size: 16px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+    .phase-header-desc { font-size: 13px; color: var(--mid); line-height: 1.6; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+    .service-card {
+      background: var(--bg);
+      border: 1px solid var(--border-lite);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.25rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .service-card:hover {
+      border-color: var(--violet-mid);
+      box-shadow: var(--shadow-md);
+    }
+    .service-name {
+      font-size: 13.5px; font-weight: 600;
+      color: var(--dark); margin-bottom: 6px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .service-name i { color: var(--violet); font-size: 14px; }
+    .service-def {
+      font-size: 12.5px; color: var(--mid);
+      line-height: 1.6; margin-bottom: 10px;
+    }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .tag {
+      font-size: 11px; padding: 2px 9px; border-radius: 10px;
+      background: var(--bg-alt); color: var(--muted);
+      border: 1px solid var(--border-lite);
+    }
+    .tag.deliverable {
+      background: var(--violet-lite); color: var(--violet-dark);
+      border-color: var(--violet-mid);
+    }
+    .tag-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .example-box {
+      background: var(--bg-off);
+      border-left: 2px solid var(--violet-mid);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 8px 10px; margin-top: 8px;
+    }
+    .example-box p { font-size: 12px; color: var(--mid); line-height: 1.55; }
+    .example-box strong { color: var(--dark); font-weight: 500; }
+
+    /* ── ② PROJECT INTAKE ───────────────────────────────────── */
+    .intake-wrap { max-width: 860px; }
+    .intake-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--mid);
+    }
+    .form-input, .form-select, .form-textarea {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px; font-size: 13.5px;
+      font-family: var(--font); color: var(--dark);
+      background: var(--bg);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      width: 100%;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--violet);
+      box-shadow: 0 0 0 3px rgba(125,63,152,0.12);
+    }
+    .form-textarea { min-height: 75px; resize: vertical; }
+
+    .intake-section-head {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--violet);
+      border-bottom: 1px solid var(--border-lite);
+      padding-bottom: 8px; margin: 1.5rem 0 12px;
+    }
+
+    .svc-select-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px; margin-bottom: 1.25rem;
+    }
+    .svc-item {
+      display: flex; align-items: flex-start; gap: 9px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-lite);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .svc-item:hover { border-color: var(--violet-mid); }
+    .svc-item.checked { border-color: var(--violet); background: var(--violet-lite); }
+    .svc-item input[type=checkbox] { margin-top: 2px; accent-color: var(--violet); flex-shrink: 0; }
+    .svc-item-label { font-size: 12.5px; color: var(--dark); line-height: 1.4; }
+    .svc-item-effort { font-size: 10.5px; color: var(--violet); font-weight: 500; }
+
+    .phase-divider {
+      grid-column: 1 / -1;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 4px 0 2px;
+    }
+
+    .btn-primary {
+      padding: 10px 24px; border-radius: 24px;
+      background: var(--violet); color: #fff;
+      font-size: 13.5px; font-weight: 500;
+      border: none; cursor: pointer;
+      font-family: var(--font);
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary {
+      padding: 10px 18px; border-radius: 24px;
+      background: transparent; color: var(--muted);
+      font-size: 13.5px; font-weight: 500;
+      border: 1px solid var(--border);
+      cursor: pointer; font-family: var(--font);
+      margin-left: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--violet-mid); color: var(--violet); }
+
+    .intake-note {
+      font-size: 11.5px; color: var(--muted); font-style: italic; margin-top: 8px;
+    }
+
+    /* Output box */
+    .output-card {
+      display: none;
+      margin-top: 2rem;
+      background: var(--bg);
+      border: 1px solid var(--border-lite);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+    .output-card.visible { display: block; }
+    .output-card-header {
+      background: var(--violet); color: #fff;
+      padding: 1rem 1.5rem;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .output-card-header h3 { font-size: 15px; font-weight: 500; }
+    .output-card-body { padding: 1.25rem 1.5rem; }
+    .output-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      border-bottom: 1px solid var(--border-lite); padding: 8px 0;
+      font-size: 13px;
+    }
+    .output-row:last-child { border-bottom: none; }
+    .output-key { color: var(--muted); font-weight: 500; }
+    .output-val { color: var(--dark); text-align: right; max-width: 62%; }
+    .output-section { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--violet); margin: 1rem 0 8px; }
+    .chip {
+      display: inline-block; font-size: 11px;
+      background: var(--violet-lite); color: var(--violet-dark);
+      padding: 2px 10px; border-radius: 12px; margin: 2px 2px 0 0;
+    }
+    .effort-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+    .effort-pill {
+      font-size: 12px; padding: 5px 14px; border-radius: 12px;
+      background: var(--bg-off); border: 1px solid var(--border-lite);
+      color: var(--mid);
+    }
+
+    /* ── ③ DECISION GUIDE ───────────────────────────────────── */
+    .guide-wrap { max-width: 900px; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 1.75rem; }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--mid);
+    }
+    .filter-select {
+      border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 8px 28px 8px 12px; font-size: 13.5px;
+      font-family: var(--font); color: var(--dark); background: var(--bg);
+      cursor: pointer; min-width: 175px;
+      transition: border-color 0.15s;
+    }
+    .filter-select:focus { outline: none; border-color: var(--violet); }
+
+    .guide-empty {
+      text-align: center; padding: 3rem;
+      color: var(--muted); font-size: 14px;
+      background: var(--bg-off); border-radius: var(--radius-lg);
+      border: 1px dashed var(--border);
+    }
+    .guide-result { display: none; }
+    .guide-result.visible { display: block; }
+
+    .result-meta {
+      background: var(--violet-lite); border-left: 3px solid var(--violet);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+    }
+    .result-title { font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 4px; }
+    .result-tip { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+    .guide-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+    .ld-core { background: var(--violet); }
+    .ld-opt { background: var(--bg-alt); border: 1px solid var(--border); }
+
+    .guide-phases { display: flex; flex-direction: column; gap: 1.25rem; }
+    .guide-phase-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--violet);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .guide-svc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    .guide-svc {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; border-radius: var(--radius-md);
+      border: 1px solid var(--border-lite); background: var(--bg);
+    }
+    .guide-svc.core { border-color: var(--violet); background: var(--violet-lite); }
+    .guide-svc-icon { color: var(--violet); font-size: 14px; margin-top: 1px; flex-shrink: 0; }
+    .guide-svc-name { font-size: 12.5px; font-weight: 600; color: var(--dark); line-height: 1.3; }
+    .guide-svc-badge {
+      display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 10px;
+      margin-left: 4px; vertical-align: middle;
+    }
+    .badge-core { background: var(--violet); color: #fff; }
+    .badge-opt { background: var(--bg-alt); color: var(--muted); border: 1px solid var(--border-lite); }
+    .guide-svc-why { font-size: 11.5px; color: var(--mid); line-height: 1.45; margin-top: 3px; }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .intake-grid { grid-template-columns: 1fr; }
+      .filter-bar { flex-direction: column; }
+      .filter-select { min-width: 100%; }
+      .page-header { padding: 2rem 1.25rem; }
+      .main { padding: 1.5rem 1.25rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ──────────────────────────────────────────────────────── -->
+<header class="page-header">
+  <div class="header-inner">
+    <p class="header-eyebrow">Aetna Medicaid · UX Product Design</p>
+    <h1 class="header-title">Human-Centered Design<br><em>Services</em></h1>
+    <p class="header-desc">
+      A complete reference for our end-to-end HCD practice — covering every service we offer,
+      how to scope an engagement, and how to select the right methods for any project context.
+    </p>
+    <div class="header-pills">
+      <span class="header-pill">30 Services</span>
+      <span class="header-pill">5 Phases</span>
+      <span class="header-pill">Project Intake Tool</span>
+      <span class="header-pill">Decision Guide</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── INNER NAV ────────────────────────────────────────────────────────── -->
+<nav class="inner-nav" aria-label="Services sections">
+  <div class="inner-nav-wrap">
+    <button class="nav-tab active" data-section="overview">Services overview</button>
+    <button class="nav-tab" data-section="intake">Project intake</button>
+    <button class="nav-tab" data-section="guide">Decision guide</button>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ─────────────────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 1: SERVICES OVERVIEW
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section active" id="section-overview">
+    <p class="section-eyebrow">What we do</p>
+    <h2 class="section-title">HCD services overview</h2>
+    <p class="section-desc">
+      Our practice spans five phases of the human-centered design process.
+      Select a phase below to explore each service, what it delivers, and how it connects to real Aetna Medicaid project contexts.
+    </p>
+
+    <!-- Phase tabs -->
+    <div class="phase-tabs" role="tablist">
+      <button class="phase-btn active" role="tab" data-phase="discovery">
+        <i class="fa-solid fa-telescope"></i> 1 · Discovery
+      </button>
+      <button class="phase-btn" role="tab" data-phase="synthesis">
+        <i class="fa-solid fa-diagram-project"></i> 2 · Synthesis
+      </button>
+      <button class="phase-btn" role="tab" data-phase="design">
+        <i class="fa-solid fa-pen-nib"></i> 3 · Design
+      </button>
+      <button class="phase-btn" role="tab" data-phase="testing">
+        <i class="fa-solid fa-clipboard-check"></i> 4 · Testing
+      </button>
+      <button class="phase-btn" role="tab" data-phase="implementation">
+        <i class="fa-solid fa-rocket"></i> 5 · Implementation
+      </button>
+    </div>
+
+    <!-- ── Phase: Discovery ── -->
+    <div class="phase-panel active" id="panel-discovery" role="tabpanel">
+      <div class="phase-header">
+        <div class="phase-header-icon"><i class="fa-solid fa-telescope"></i></div>
+        <div>
+          <p class="phase-header-name">Discovery &amp; Research</p>
+          <p class="phase-header-desc">Understand who your users are, what they need, and where the current experience is failing them. We ground every decision in real evidence — not assumptions. This phase defines the problem worth solving.</p>
+        </div>
+      </div>
+      <div class="services-grid" id="grid-discovery"></div>
+    </div>
+
+    <!-- ── Phase: Synthesis ── -->
+    <div class="phase-panel" id="panel-synthesis" role="tabpanel">
+      <div class="phase-header">
+        <div class="phase-header-icon"><i class="fa-solid fa-diagram-project"></i></div>
+        <div>
+          <p class="phase-header-name">Synthesis &amp; Strategy</p>
+          <p class="phase-header-desc">Transform raw research into clear insight and actionable direction. We make sense of complexity, align teams around a shared understanding of users, and define the strategic opportunity that drives design decisions.</p>
+        </div>
+      </div>
+      <div class="services-grid" id="grid-synthesis"></div>
+    </div>
+
+    <!-- ── Phase: Design ── -->
+    <div class="phase-panel" id="panel-design" role="tabpanel">
+      <div class="phase-header">
+        <div class="phase-header-icon"><i class="fa-solid fa-pen-nib"></i></div>
+        <div>
+          <p class="phase-header-name">Ideation &amp; Design</p>
+          <p class="phase-header-desc">Translate insight into tangible solutions. We move from rough concepts through validated designs — aligning business requirements, user needs, and technical feasibility into experiences that are clear, accessible, and buildable.</p>
+        </div>
+      </div>
+      <div class="services-grid" id="grid-design"></div>
+    </div>
+
+    <!-- ── Phase: Testing ── -->
+    <div class="phase-panel" id="panel-testing" role="tabpanel">
+      <div class="phase-header">
+        <div class="phase-header-icon"><i class="fa-solid fa-clipboard-check"></i></div>
+        <div>
+          <p class="phase-header-name">Testing &amp; Validation</p>
+          <p class="phase-header-desc">Verify that designs actually work before they ship. We test with real users to surface usability problems, validate design decisions, and give teams the evidence they need to build with confidence.</p>
+        </div>
+      </div>
+      <div class="services-grid" id="grid-testing"></div>
+    </div>
+
+    <!-- ── Phase: Implementation ── -->
+    <div class="phase-panel" id="panel-implementation" role="tabpanel">
+      <div class="phase-header">
+        <div class="phase-header-icon"><i class="fa-solid fa-rocket"></i></div>
+        <div>
+          <p class="phase-header-name">Implementation Support</p>
+          <p class="phase-header-desc">Bridge the gap between design intent and built reality. We partner with engineering and product teams to ensure what gets shipped matches what was designed — and that it continues to perform for users over time.</p>
+        </div>
+      </div>
+      <div class="services-grid" id="grid-implementation"></div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 2: PROJECT INTAKE
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="section-intake">
+    <p class="section-eyebrow">Start a project</p>
+    <h2 class="section-title">Project intake &amp; scoping</h2>
+    <p class="section-desc">
+      Fill in your project details and select the HCD services your engagement will require.
+      The tool generates a scoping summary with effort estimates and a recommended phase sequence.
+    </p>
+
+    <div class="intake-wrap">
+      <div class="intake-grid">
+        <div class="form-group">
+          <label class="form-label">Project name</label>
+          <input type="text" class="form-input" id="i-name" placeholder="e.g. Member Portal Redesign" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Requestor / team</label>
+          <input type="text" class="form-input" id="i-team" placeholder="e.g. Digital Product — Aetna Medicaid" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target launch</label>
+          <input type="text" class="form-input" id="i-launch" placeholder="e.g. Q3 2026" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Project type</label>
+          <select class="form-select" id="i-type">
+            <option value="">— Select —</option>
+            <option>New feature / product</option>
+            <option>Redesign / optimization</option>
+            <option>Research only</option>
+            <option>Design system / component</option>
+            <option>Strategy &amp; roadmap input</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Problem statement</label>
+          <textarea class="form-textarea" id="i-problem" placeholder="Describe the user or business problem this project is solving..."></textarea>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Known constraints</label>
+          <textarea class="form-textarea" id="i-constraints" placeholder="Timeline pressure, regulatory requirements, existing tech, budget caps, accessibility mandates..."></textarea>
+        </div>
+      </div>
+
+      <div class="intake-section-head">Select services needed</div>
+      <div class="svc-select-grid" id="svc-grid-intake"></div>
+
+      <button class="btn-primary" onclick="generateIntake()">
+        <i class="fa-solid fa-file-lines"></i> Generate scoping summary
+      </button>
+      <button class="btn-secondary" onclick="clearIntake()">Clear</button>
+      <p class="intake-note">This is a planning tool — estimates are directional, not contractual.</p>
+
+      <div class="output-card" id="intake-output">
+        <div class="output-card-header">
+          <i class="fa-solid fa-file-circle-check"></i>
+          <h3 id="out-proj-name">Scoping summary</h3>
+        </div>
+        <div class="output-card-body">
+          <div id="out-meta"></div>
+          <p class="output-section">Scoped services</p>
+          <div id="out-services"></div>
+          <p class="output-section">Effort estimate</p>
+          <div class="effort-pills" id="out-effort"></div>
+          <p class="output-section">Recommended sequence</p>
+          <div id="out-sequence" style="font-size:13px; color:var(--mid); line-height:1.8;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════
+       SECTION 3: DECISION GUIDE
+  ══════════════════════════════════════════════════════════ -->
+  <section class="section" id="section-guide">
+    <p class="section-eyebrow">Choose your methods</p>
+    <h2 class="section-title">Service decision guide</h2>
+    <p class="section-desc">
+      Select your project scenario to see which HCD services are recommended — and why.
+      Core services are essential to the engagement; optional services strengthen outcomes where capacity allows.
+    </p>
+
+    <div class="guide-wrap">
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label class="filter-label">Project type</label>
+          <select class="filter-select" id="g-type" onchange="runGuide()">
+            <option value="">— Select type —</option>
+            <option value="new">New feature / product</option>
+            <option value="redesign">Redesign / optimization</option>
+            <option value="research">Research only</option>
+            <option value="ds">Design system / component</option>
+            <option value="strategy">Strategy &amp; roadmap input</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Timeline pressure</label>
+          <select class="filter-select" id="g-time" onchange="runGuide()">
+            <option value="">— Select —</option>
+            <option value="tight">Tight (under 4 weeks)</option>
+            <option value="medium">Medium (4–10 weeks)</option>
+            <option value="open">Open (10+ weeks)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Prior research?</label>
+          <select class="filter-select" id="g-research" onchange="runGuide()">
+            <option value="">— Select —</option>
+            <option value="none">No prior research</option>
+            <option value="some">Some existing research</option>
+            <option value="full">Full research available</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="guide-empty" id="guide-empty">
+        Select your project type, timeline, and research status above to see service recommendations.
+      </div>
+
+      <div class="guide-result" id="guide-result">
+        <div class="result-meta">
+          <p class="result-title" id="guide-title"></p>
+          <p class="result-tip" id="guide-tip"></p>
+        </div>
+        <div class="guide-legend">
+          <span class="legend-item"><span class="legend-dot ld-core"></span> Core — essential for this scenario</span>
+          <span class="legend-item"><span class="legend-dot ld-opt"></span> Optional — strengthens if capacity allows</span>
+        </div>
+        <div class="guide-phases" id="guide-phases"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── SCRIPTS ──────────────────────────────────────────────────────────── -->
+<script>
+/* ═══════════════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════════════ */
+const SERVICES = [
+  { id:'interviews',  phase:'discovery',      icon:'fa-users',           name:'User interviews',             effort:2, def:'One-on-one structured conversations to surface mental models, pain points, and unmet needs.', example:'Interviewing Medicaid members navigating prior authorization to map where confusion occurs.' },
+  { id:'contextual',  phase:'discovery',      icon:'fa-eye',             name:'Contextual inquiry',          effort:3, def:'Observing users in their natural environment while completing real tasks.',                   example:'Shadowing care coordinators to document workarounds built into daily workflows.' },
+  { id:'surveys',     phase:'discovery',      icon:'fa-list-check',      name:'Surveys & screeners',         effort:1, def:'Quantitative data collection at scale to validate hypotheses and segment audiences.',        example:'Recruiting Aetna members across plan types for a benefits comprehension study.' },
+  { id:'analytics',   phase:'discovery',      icon:'fa-chart-bar',       name:'Analytics review',            effort:1, def:'Interpreting behavioral data to identify drop-off points and usage anomalies.',              example:'Pinpointing where members abandon the claims status flow in the portal.' },
+  { id:'desk',        phase:'discovery',      icon:'fa-book-open',       name:'Desk research',               effort:1, def:'Synthesizing existing research, competitive landscapes, and industry benchmarks.',           example:'Benchmarking digital health onboarding flows across major payers.' },
+  { id:'stakeholder', phase:'discovery',      icon:'fa-id-badge',        name:'Stakeholder interviews',      effort:1, def:'Structured conversations to surface business goals, constraints, and org context.',          example:'Interviewing product and compliance teams before redesigning a regulated benefits page.' },
+  { id:'affinity',    phase:'synthesis',      icon:'fa-table-columns',   name:'Affinity mapping',            effort:1, def:'Collaborative clustering of research observations into themes to reveal patterns.',          example:'Sorting 15 member interview findings into themes around trust and navigation confidence.' },
+  { id:'journey',     phase:'synthesis',      icon:'fa-route',           name:'Journey mapping',             effort:2, def:'Visualizing the end-to-end experience across touchpoints — actions, emotions, and pain points.', example:'Mapping a patient\'s journey from diagnosis through insurance approval, pharmacy, and follow-up care.' },
+  { id:'personas',    phase:'synthesis',      icon:'fa-user-circle',     name:'Persona development',         effort:2, def:'Composite portraits of user archetypes capturing goals, behaviors, and frustrations.',       example:'Three member personas (caregiver, chronic condition manager, first-time enrollee) for portal redesign.' },
+  { id:'hmw',         phase:'synthesis',      icon:'fa-bullseye',        name:'HMW framing',                 effort:1, def:'Translating insights into "How might we…" design challenge statements.',                    example:'How might we help members understand deductible status without calling customer support?' },
+  { id:'blueprint',   phase:'synthesis',      icon:'fa-sitemap',         name:'Service blueprinting',        effort:2, def:'Mapping the full service system — frontstage actions, backstage processes, and gaps.',       example:'Blueprinting prior auth workflow to expose disconnects between member, provider, and ops.' },
+  { id:'readout',     phase:'synthesis',      icon:'fa-presentation-screen', name:'Research readout',        effort:1, def:'Structured presentation of findings and recommendations for executive stakeholders.',        example:'20-slide readout translating member research into three priorities for the redesign roadmap.' },
+  { id:'ia',          phase:'design',         icon:'fa-network-wired',   name:'Information architecture',    effort:2, def:'Structuring content and navigation grounded in user mental models.',                        example:'Restructuring member portal navigation based on card sort data across 40 members.' },
+  { id:'wireframes',  phase:'design',         icon:'fa-object-group',    name:'Wireframing',                 effort:2, def:'Low-to-mid fidelity structural blueprints defining layout and interaction flow.',           example:'Wireframes for a 6-step enrollment flow annotated with logic and error states.' },
+  { id:'prototype',   phase:'design',         icon:'fa-mobile-screen',   name:'Prototyping',                 effort:3, def:'Interactive simulations used to test with users and communicate intent to developers.',     example:'High-fidelity Figma prototype of the redesigned claims tracker, tested with 8 members.' },
+  { id:'visual',      phase:'design',         icon:'fa-palette',         name:'Visual design',               effort:3, def:'Applying brand guidelines and accessibility standards to create polished, trust-building UI.', example:'Final comps for a benefits page following Aetna MLP design system and WCAG 2.1 AA.' },
+  { id:'uxwriting',   phase:'design',         icon:'fa-pen-to-square',   name:'UX writing',                  effort:1, def:'Crafting interface copy — labels, errors, tooltips, CTAs — at appropriate reading level.',   example:'Rewriting prior auth status messages to plain language at a 6th-grade reading level.' },
+  { id:'designsys',   phase:'design',         icon:'fa-cubes',           name:'Design system contribution',  effort:2, def:'Creating or extending reusable components and patterns for scalability and consistency.',    example:'Documenting a new "coverage alert" pattern for the Aetna MLP library with all states.' },
+  { id:'modtest',     phase:'testing',        icon:'fa-screen-users',    name:'Moderated usability testing', effort:3, def:'Live facilitated sessions where participants complete tasks on prototypes or live products.', example:'8 sessions testing a pharmacy benefits search tool with Medicare members aged 65+.' },
+  { id:'unmod',       phase:'testing',        icon:'fa-circle-play',     name:'Unmoderated testing',         effort:2, def:'Remote task-based studies at scale for validating interactions or comparing design variations.', example:'50-participant study comparing two benefits card layouts for comprehension and accuracy.' },
+  { id:'concept',     phase:'testing',        icon:'fa-lightbulb',       name:'Concept testing',             effort:2, def:'Presenting early ideas to users for feedback before significant design investment.',          example:'Testing three approaches to displaying out-of-pocket costs to find the right mental model.' },
+  { id:'a11y',        phase:'testing',        icon:'fa-universal-access', name:'Accessibility audit',         effort:2, def:'Evaluating designs against WCAG 2.1 AA — keyboard nav, screen readers, contrast, errors.',  example:'Full A11Y audit of the enrollment flow producing a prioritized remediation list.' },
+  { id:'heuristic',   phase:'testing',        icon:'fa-compass',         name:'Heuristic evaluation',        effort:1, def:'Expert review against established UX principles to rapidly identify usability issues.',       example:'Heuristic review of a legacy provider tool ahead of a modernization initiative.' },
+  { id:'cardsort',    phase:'testing',        icon:'fa-cards-blank',     name:'Card sorting & tree testing', effort:2, def:'IA research methods revealing how users group content and navigate proposed structures.',     example:'Tree test of proposed Aetna.com navigation with 80 participants to validate labeling.' },
+  { id:'handoff',     phase:'implementation', icon:'fa-file-lines',      name:'Design handoff & specs',      effort:1, def:'Annotated design files and dev-ready documentation that eliminate ambiguity for engineering.', example:'Full Figma handoff package covering all states, breakpoints, and animation specs.' },
+  { id:'dqa',         phase:'implementation', icon:'fa-shield-check',    name:'Design QA',                   effort:2, def:'Reviewing built product against approved designs to catch deviations before production.',    example:'Sprint-by-sprint QA across three engineering squads building member onboarding.' },
+  { id:'iterative',   phase:'implementation', icon:'fa-arrows-rotate',   name:'Iterative design support',    effort:3, def:'Ongoing design partnership through agile cycles — handling edge cases and design debt.',      example:'Embedded design support across a 6-sprint release cycle with a product squad.' },
+  { id:'docs',        phase:'implementation', icon:'fa-book-bookmark',   name:'Documentation & guidelines',  effort:1, def:'Pattern libraries, usage guidelines, and design rationale for team autonomy.',               example:'Guidelines for how and when to use the Aetna MLP "alert" component.' },
+  { id:'metrics',     phase:'implementation', icon:'fa-chart-line',      name:'Post-launch measurement',     effort:1, def:'Defining success metrics and reviewing analytics to assess outcomes and guide iteration.',    example:'Tracking task completion and CSAT for 90 days post-launch on a redesigned EOB experience.' },
+  { id:'workshops',   phase:'implementation', icon:'fa-people-group',    name:'Design workshops',            effort:1, def:'Facilitated co-creation sessions aligning product, engineering, and business stakeholders.',  example:'3-hour design sprint with 12 stakeholders on a cost transparency challenge.' },
+];
+
+const PHASES = ['discovery','synthesis','design','testing','implementation'];
+const PHASE_ICONS = { discovery:'fa-telescope', synthesis:'fa-diagram-project', design:'fa-pen-nib', testing:'fa-clipboard-check', implementation:'fa-rocket' };
+const PHASE_LABELS = { discovery:'Discovery', synthesis:'Synthesis', design:'Design', testing:'Testing', implementation:'Implementation' };
+const EFFORT_LBL = ['','Low','Medium','High'];
+
+/* ═══════════════════════════════════════════════════════
+   INNER NAV
+═══════════════════════════════════════════════════════ */
+document.querySelectorAll('.nav-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('section-' + btn.dataset.section).classList.add('active');
+  });
+});
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 1: SERVICES OVERVIEW
+═══════════════════════════════════════════════════════ */
+function renderServiceCard(svc) {
+  return `<div class="service-card">
+    <p class="service-name"><i class="fa-solid ${svc.icon}"></i> ${svc.name}</p>
+    <p class="service-def">${svc.def}</p>
+    <p class="tag-label">Deliverables</p>
+    <div class="tag-row">
+      ${getDeliverables(svc.id).map(d => `<span class="tag deliverable">${d}</span>`).join('')}
+    </div>
+    <p class="tag-label" style="margin-top:8px;">Effort</p>
+    <div class="tag-row"><span class="tag">${EFFORT_LBL[svc.effort]}</span></div>
+    <div class="example-box"><p><strong>Aetna Medicaid example:</strong> ${svc.example}</p></div>
+  </div>`;
+}
+
+function getDeliverables(id) {
+  const map = {
+    interviews:['Interview guide','Findings report'], contextual:['Field notes','Observation report'],
+    surveys:['Survey instrument','Data summary'], analytics:['Annotated funnel','Insights memo'],
+    desk:['Research brief','Competitive audit'], stakeholder:['Stakeholder map','Goals summary'],
+    affinity:['Affinity diagram','Theme clusters'], journey:['Journey map','Opportunity areas'],
+    personas:['Persona profiles','Need statements'], hmw:['HMW statements','Opportunity brief'],
+    blueprint:['Service blueprint','Gap analysis'], readout:['Slide deck','Executive summary'],
+    ia:['Site map','Navigation model'], wireframes:['Wireframe deck','Flow annotations'],
+    prototype:['Figma prototype','Interaction specs'], visual:['High-fidelity screens','Redlines'],
+    uxwriting:['Copy deck','Content model'], designsys:['Component specs','Usage guidelines'],
+    modtest:['Test plan','Session findings'], unmod:['Task completion data','Clip highlights'],
+    concept:['Concept deck','Preference data'], a11y:['Audit report','Remediation list'],
+    heuristic:['Issue log','Severity ratings'], cardsort:['IA analysis','Findability score'],
+    handoff:['Annotated Figma','Spec sheet'], dqa:['QA log','Annotated screenshots'],
+    iterative:['Updated comps','Decision log'], docs:['Pattern docs','Decision rationale'],
+    metrics:['Metrics framework','Post-launch report'], workshops:['Workshop plan','Outcome summary'],
+  };
+  return map[id] || [];
+}
+
+PHASES.forEach(phase => {
+  const grid = document.getElementById('grid-' + phase);
+  if (grid) {
+    grid.innerHTML = SERVICES.filter(s => s.phase === phase).map(renderServiceCard).join('');
+  }
+});
+
+document.querySelectorAll('.phase-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.phase-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.phase).classList.add('active');
+  });
+});
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 2: PROJECT INTAKE
+═══════════════════════════════════════════════════════ */
+const checked = new Set();
+
+function buildIntakeGrid() {
+  const grid = document.getElementById('svc-grid-intake');
+  let html = '';
+  PHASES.forEach(phase => {
+    const svcs = SERVICES.filter(s => s.phase === phase);
+    html += `<div class="phase-divider">${PHASE_LABELS[phase]}</div>`;
+    svcs.forEach(s => {
+      html += `<label class="svc-item" id="icard-${s.id}" onclick="toggleIntake('${s.id}')">
+        <input type="checkbox" id="icb-${s.id}" onclick="event.stopPropagation()" />
+        <span>
+          <span class="svc-item-label">${s.name}</span><br>
+          <span class="svc-item-effort">${EFFORT_LBL[s.effort]} effort</span>
+        </span>
+      </label>`;
+    });
+  });
+  grid.innerHTML = html;
+}
+
+function toggleIntake(id) {
+  const cb = document.getElementById('icb-' + id);
+  const card = document.getElementById('icard-' + id);
+  if (checked.has(id)) { checked.delete(id); cb.checked = false; card.classList.remove('checked'); }
+  else { checked.add(id); cb.checked = true; card.classList.add('checked'); }
+}
+
+function generateIntake() {
+  const name = document.getElementById('i-name').value || 'Untitled project';
+  const team = document.getElementById('i-team').value;
+  const launch = document.getElementById('i-launch').value;
+  const type = document.getElementById('i-type').value;
+  const problem = document.getElementById('i-problem').value;
+  const constraints = document.getElementById('i-constraints').value;
+  const selected = SERVICES.filter(s => checked.has(s.id));
+  if (!selected.length) { alert('Please select at least one service.'); return; }
+
+  document.getElementById('out-proj-name').textContent = name;
+
+  const fields = [
+    ['Team / requestor', team || '—'],
+    ['Project type', type || '—'],
+    ['Target launch', launch || '—'],
+    ['Problem statement', problem || '—'],
+    ['Constraints', constraints || '—'],
+  ];
+  document.getElementById('out-meta').innerHTML = fields.map(([k,v]) =>
+    `<div class="output-row"><span class="output-key">${k}</span><span class="output-val">${v}</span></div>`).join('');
+
+  const byPhase = {};
+  selected.forEach(s => { if (!byPhase[s.phase]) byPhase[s.phase] = []; byPhase[s.phase].push(s); });
+  let svcHtml = '';
+  PHASES.filter(p => byPhase[p]).forEach(phase => {
+    svcHtml += `<div style="margin-bottom:10px;"><span style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);">${PHASE_LABELS[phase]}</span><br>`;
+    svcHtml += byPhase[phase].map(s => `<span class="chip">${s.name}</span>`).join('');
+    svcHtml += '</div>';
+  });
+  document.getElementById('out-services').innerHTML = svcHtml;
+
+  const total = selected.reduce((s, x) => s + x.effort, 0);
+  const weeks = Math.ceil(total * 0.8);
+  const label = total <= 8 ? 'Light engagement' : total <= 16 ? 'Mid-weight engagement' : 'Full-cycle engagement';
+  document.getElementById('out-effort').innerHTML =
+    `<span class="effort-pill"><i class="fa-solid fa-clock"></i> ~${weeks}–${weeks+2} weeks</span>
+     <span class="effort-pill"><i class="fa-solid fa-layer-group"></i> ${selected.length} services</span>
+     <span class="effort-pill"><i class="fa-solid fa-chart-simple"></i> ${label}</span>`;
+
+  const seq = PHASES.filter(p => byPhase[p]).map((p, i) =>
+    `${i+1}. <strong>${PHASE_LABELS[p]}</strong> → ${byPhase[p].map(s=>s.name).join(', ')}`).join('<br>');
+  document.getElementById('out-sequence').innerHTML = seq;
+
+  const out = document.getElementById('intake-output');
+  out.classList.add('visible');
+  out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function clearIntake() {
+  checked.clear();
+  document.querySelectorAll('.svc-item').forEach(c => c.classList.remove('checked'));
+  document.querySelectorAll('.svc-item input').forEach(c => c.checked = false);
+  ['i-name','i-team','i-launch','i-problem','i-constraints'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('i-type').value = '';
+  document.getElementById('intake-output').classList.remove('visible');
+}
+
+buildIntakeGrid();
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 3: DECISION GUIDE DATA
+═══════════════════════════════════════════════════════ */
+const GUIDE = {
+  new: {
+    tight: { title:'New feature — tight timeline', tip:'<strong>Shortcut strategy:</strong> Lead with stakeholder interviews and analytics to rapidly map known terrain. Prototype fast and run a single round of moderated testing before shipping.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Surface goals and constraints fast.'},{n:'Analytics review',c:true,w:'Use existing data instead of time-consuming field research.'},{n:'Desk research',c:false,w:'Pull in if a benchmark already exists.'}], synthesis:[{n:'HMW framing',c:true,w:'Quickly align the team on the design challenge.'},{n:'Affinity mapping',c:false,w:'Only if enough inputs warrant it.'}], design:[{n:'Wireframing',c:true,w:'Move fast to structure before visual polish.'},{n:'Prototyping',c:true,w:'Essential for any user-facing testing.'},{n:'UX writing',c:false,w:'At minimum, review key CTAs and error states.'}], testing:[{n:'Moderated usability testing',c:true,w:'One focused round — 5 participants — before launch.'},{n:'Heuristic evaluation',c:false,w:'A quick expert pass can catch blockers.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Specs prevent costly engineering rework.'},{n:'Design QA',c:false,w:'At minimum, a single pass at feature-complete.'}] } },
+    medium: { title:'New feature — medium timeline', tip:'<strong>Balanced approach:</strong> Invest upfront in discovery to avoid rework mid-build. Run two rounds of testing — one on wireframes, one on the final prototype.', phases:{ discovery:[{n:'User interviews',c:true,w:'Validate assumptions before designing — talk to at least 6 users.'},{n:'Stakeholder interviews',c:true,w:'Align requirements and constraints from the start.'},{n:'Analytics review',c:true,w:'Identify behavioral patterns in existing data.'},{n:'Surveys & screeners',c:false,w:'Useful for recruiting or quantitative validation.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Cluster interview findings into actionable themes.'},{n:'HMW framing',c:true,w:'Translate themes into design challenge statements.'},{n:'Journey mapping',c:false,w:'Valuable if the feature spans multiple touchpoints.'}], design:[{n:'Wireframing',c:true,w:'Establish structure before visual investment.'},{n:'Prototyping',c:true,w:'Test at mid-fidelity before high-fidelity.'},{n:'Visual design',c:true,w:'Produce production-ready comps.'},{n:'UX writing',c:true,w:'Error states and onboarding copy matter from day one.'}], testing:[{n:'Moderated usability testing',c:true,w:'Two rounds — wireframes and near-final prototype.'},{n:'Accessibility audit',c:true,w:'Catch A11Y issues before engineering builds.'},{n:'Unmoderated testing',c:false,w:'Scale a specific interaction question.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Full annotated Figma with all states and responsive specs.'},{n:'Design QA',c:true,w:'Catch drift between design intent and built output.'},{n:'Post-launch measurement',c:false,w:'Define KPIs now; measure 60–90 days post-launch.'}] } },
+    open: { title:'New feature — full-cycle engagement', tip:'<strong>Full HCD investment:</strong> Run a proper discovery sprint, synthesize into personas and journey maps, design iteratively, and embed through the build. This is the gold standard.', phases:{ discovery:[{n:'User interviews',c:true,w:'Deep qualitative discovery — 8–12 participants.'},{n:'Contextual inquiry',c:true,w:'Observe users in their real environment.'},{n:'Surveys & screeners',c:true,w:'Quantitative validation at scale.'},{n:'Analytics review',c:true,w:'Triangulate behavioral data with qualitative findings.'},{n:'Desk research',c:true,w:'Competitive benchmarking and literature review.'},{n:'Stakeholder interviews',c:true,w:'Full alignment on goals and constraints.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis sprint from all inputs.'},{n:'Journey mapping',c:true,w:'Map the complete experience across all touchpoints.'},{n:'Persona development',c:true,w:'Create durable user archetypes.'},{n:'HMW framing',c:true,w:'Frame challenges before ideation begins.'},{n:'Research readout',c:true,w:'Present findings before design begins.'}], design:[{n:'Information architecture',c:true,w:'Define navigation from user mental models.'},{n:'Wireframing',c:true,w:'Iterate quickly on structure.'},{n:'Prototyping',c:true,w:'Test multiple fidelity levels.'},{n:'Visual design',c:true,w:'Polished, production-ready comps.'},{n:'UX writing',c:true,w:'Full content strategy for all UI copy.'},{n:'Design system contribution',c:false,w:'Contribute new patterns back to the system.'}], testing:[{n:'Moderated usability testing',c:true,w:'Multiple rounds — concept, wireframe, high-fidelity.'},{n:'Unmoderated testing',c:true,w:'Validate interactions at scale.'},{n:'Concept testing',c:true,w:'Test multiple directions before committing.'},{n:'Accessibility audit',c:true,w:'Full WCAG 2.1 AA audit.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Comprehensive package with all states.'},{n:'Design QA',c:true,w:'Sprint-by-sprint QA.'},{n:'Iterative design support',c:true,w:'Embedded design through all sprints.'},{n:'Post-launch measurement',c:true,w:'Track KPIs for 90 days post-launch.'}] } },
+  },
+  redesign: {
+    tight: { title:'Redesign — tight timeline', tip:'<strong>Audit-first:</strong> Start with a heuristic evaluation and analytics review to diagnose the current state. Target the highest-impact fixes and validate with a quick usability test.', phases:{ discovery:[{n:'Analytics review',c:true,w:'Understand current performance before redesigning.'},{n:'Stakeholder interviews',c:true,w:'Align on what "better" means.'}], synthesis:[{n:'HMW framing',c:true,w:'Define redesign scope and success criteria.'}], design:[{n:'Wireframing',c:true,w:'Rapid structural changes before visual redesign.'},{n:'Prototyping',c:true,w:'Needed to test the redesigned state.'},{n:'Visual design',c:false,w:'Update only if brand or A11Y compliance requires it.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert pass on current design for clear violations.'},{n:'Moderated usability testing',c:true,w:'Validate the redesign with at least 5 users.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Clean specs for all changed components.'},{n:'Design QA',c:false,w:'At least a single pass at feature-complete.'}] } },
+    medium: { title:'Redesign — medium timeline', tip:'<strong>Diagnostic before prescriptive:</strong> Invest the first week fully understanding what\'s broken and why before touching any design files.', phases:{ discovery:[{n:'User interviews',c:true,w:'Talk to current users about pain points.'},{n:'Analytics review',c:true,w:'Quantify where and how often failures happen.'},{n:'Stakeholder interviews',c:true,w:'Understand redesign goals and constraints.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Synthesize findings into prioritized themes.'},{n:'Journey mapping',c:true,w:'Map the current experience to identify redesign zones.'},{n:'Research readout',c:false,w:'Brief stakeholder readout before redesign begins.'}], design:[{n:'Wireframing',c:true,w:'Redesign structure before visual changes.'},{n:'Prototyping',c:true,w:'Test the redesigned flow before visual production.'},{n:'Visual design',c:true,w:'Align to brand and accessibility requirements.'},{n:'UX writing',c:false,w:'Audit copy if messaging contributed to failures.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert audit of existing product before redesign.'},{n:'Moderated usability testing',c:true,w:'Compare redesign to current-state baseline.'},{n:'Accessibility audit',c:true,w:'Use the redesign to achieve WCAG 2.1 AA.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Full specs for all changed components.'},{n:'Design QA',c:true,w:'Redesigns are prone to build drift — QA every sprint.'},{n:'Post-launch measurement',c:false,w:'Validate improvement against baseline after launch.'}] } },
+    open: { title:'Redesign — full-cycle engagement', tip:'<strong>Full-cycle redesign:</strong> A comprehensive redesign warrants its own discovery sprint. Treat it like a new product with user interviews, journey mapping, and concept testing.', phases:{ discovery:[{n:'User interviews',c:true,w:'Full qualitative discovery with current users.'},{n:'Analytics review',c:true,w:'Data-driven diagnosis of current product failures.'},{n:'Stakeholder interviews',c:true,w:'Full alignment on redesign goals and KPIs.'},{n:'Contextual inquiry',c:false,w:'If the current workflow has complex environmental factors.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis from all inputs.'},{n:'Journey mapping',c:true,w:'Document current and target-state experience.'},{n:'Research readout',c:true,w:'Stakeholder readout before direction is set.'}], design:[{n:'Information architecture',c:true,w:'Validate or restructure navigation.'},{n:'Wireframing',c:true,w:'Explore multiple structural directions.'},{n:'Prototyping',c:true,w:'Test at multiple fidelity levels.'},{n:'Visual design',c:true,w:'Full visual redesign.'},{n:'UX writing',c:true,w:'End-to-end copy audit and rewrite.'}], testing:[{n:'Concept testing',c:true,w:'Test multiple redesign directions before committing.'},{n:'Moderated usability testing',c:true,w:'Multiple rounds — baseline, mid, and final.'},{n:'Accessibility audit',c:true,w:'Full WCAG 2.1 AA audit.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Full comprehensive Figma package.'},{n:'Design QA',c:true,w:'Sprint-by-sprint quality review.'},{n:'Iterative design support',c:true,w:'Embedded design through build cycle.'},{n:'Post-launch measurement',c:true,w:'Measure impact against baseline for 90 days.'}] } },
+  },
+  research: {
+    tight: { title:'Research only — rapid insights sprint', tip:'<strong>Lean research sprint:</strong> Prioritize speed-to-insight. Run a stakeholder alignment session first, then 5–6 focused interviews. Deliver findings as a tight 10-slide readout.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Align on research questions and decision stakes upfront.'},{n:'Surveys & screeners',c:true,w:'Recruit the right participants fast.'},{n:'User interviews',c:true,w:'Primary method — 5–6 focused sessions.'},{n:'Analytics review',c:false,w:'If behavioral data is readily accessible.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Synthesize findings rapidly.'},{n:'HMW framing',c:true,w:'Package findings as design challenges.'},{n:'Research readout',c:true,w:'Tight findings presentation — 10 slides max.'}] } },
+    medium: { title:'Research only — full discovery sprint', tip:'<strong>Discovery sprint:</strong> Mix qualitative and quantitative methods. Weeks one for recruiting, weeks two–three for research, week four for synthesis and readout.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Define research scope.'},{n:'Surveys & screeners',c:true,w:'Quantitative validation alongside qualitative.'},{n:'User interviews',c:true,w:'Primary method — 8–10 sessions.'},{n:'Analytics review',c:true,w:'Triangulate with behavioral data.'},{n:'Desk research',c:false,w:'Add competitive or academic context.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full collaborative synthesis.'},{n:'HMW framing',c:true,w:'Convert insights into design challenges.'},{n:'Research readout',c:true,w:'Full stakeholder readout with recommendations.'},{n:'Journey mapping',c:false,w:'If research question maps to an end-to-end experience.'},{n:'Persona development',c:false,w:'If archetypes are needed for future design work.'}] } },
+    open: { title:'Research only — strategic research programme', tip:'<strong>Multi-method programme:</strong> Combine interviews, contextual inquiry, a survey, and analytics. Deliver a comprehensive report plus journey maps and personas.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Thorough alignment on scope and questions.'},{n:'User interviews',c:true,w:'Deep qualitative — 10–15 sessions.'},{n:'Contextual inquiry',c:true,w:'Observe users in natural context.'},{n:'Surveys & screeners',c:true,w:'Quantitative validation at scale.'},{n:'Analytics review',c:true,w:'Full behavioral data analysis.'},{n:'Desk research',c:true,w:'Comprehensive literature and competitive review.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis from all inputs.'},{n:'Journey mapping',c:true,w:'End-to-end map with emotional journey and opportunities.'},{n:'Persona development',c:true,w:'Research-grounded personas for team alignment.'},{n:'HMW framing',c:true,w:'Full opportunity framing.'},{n:'Research readout',c:true,w:'Comprehensive findings report and executive presentation.'},{n:'Service blueprinting',c:false,w:'If research reveals systemic gaps worth documenting.'}] } },
+  },
+  ds: {
+    tight: { title:'Design system — targeted component work', tip:'<strong>Component-first:</strong> Focus on states, variants, and usage rules for the specific component. Run a heuristic check before building net-new.', phases:{ discovery:[{n:'Desk research',c:true,w:'Audit similar components in the current system.'}], design:[{n:'Wireframing',c:true,w:'Sketch all component states before visual production.'},{n:'Visual design',c:true,w:'Build polished, system-aligned comps.'},{n:'Design system contribution',c:true,w:'The primary deliverable — component spec and guidelines.'},{n:'UX writing',c:false,w:'Document copy guidelines or placeholder patterns.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert review before publishing.'}], implementation:[{n:'Design handoff & specs',c:true,w:'All states, tokens, and interaction specs.'},{n:'Documentation & guidelines',c:true,w:'Usage guidelines for designers consuming the component.'}] } },
+    medium: { title:'Design system — full component or pattern', tip:'<strong>Research-informed components:</strong> Even design system work benefits from a brief discovery phase to validate how the pattern fits the existing system.', phases:{ discovery:[{n:'Desk research',c:true,w:'Benchmark against comparable design systems.'},{n:'Stakeholder interviews',c:false,w:'Align with engineering on component requirements.'}], design:[{n:'Wireframing',c:true,w:'Explore structural approaches before visual production.'},{n:'Visual design',c:true,w:'Full visual build with all states and variants.'},{n:'Design system contribution',c:true,w:'Complete pattern documentation and library contribution.'},{n:'UX writing',c:true,w:'Copy guidelines and placeholder content standards.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert review before publishing.'},{n:'Accessibility audit',c:true,w:'All new components must meet WCAG 2.1 AA.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Engineering-ready spec with tokens and behavior.'},{n:'Documentation & guidelines',c:true,w:'Usage guidelines, do/don\'ts, and code examples.'}] } },
+    open: { title:'Design system — system-wide initiative', tip:'<strong>Systemic design investment:</strong> A system-wide initiative requires discovery with the designers and engineers who consume the system — they are your users.', phases:{ discovery:[{n:'User interviews',c:true,w:'Interview designers and engineers who use the system.'},{n:'Stakeholder interviews',c:true,w:'Align on governance and contribution model.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Synthesize internal user pain points.'},{n:'Research readout',c:true,w:'Present findings to governance before work begins.'}], design:[{n:'Visual design',c:true,w:'Full visual production for all new/updated components.'},{n:'Design system contribution',c:true,w:'Comprehensive, documented system update.'},{n:'UX writing',c:true,w:'System-wide copy and component guidelines.'}], testing:[{n:'Accessibility audit',c:true,w:'Full WCAG 2.1 AA audit before release.'},{n:'Heuristic evaluation',c:true,w:'Expert evaluation of the system\'s internal UX.'}], implementation:[{n:'Documentation & guidelines',c:true,w:'Comprehensive usage and contribution documentation.'},{n:'Design handoff & specs',c:true,w:'Engineering-ready specs with token references.'},{n:'Design workshops',c:true,w:'Adoption workshops for teams onboarding to the system.'}] } },
+  },
+  strategy: {
+    tight: { title:'Strategy & roadmap input — rapid alignment', tip:'<strong>Alignment sprint:</strong> Best served by a stakeholder alignment session, synthesis of available research, and a framed set of opportunity areas as a tight presentation.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Understand the strategic questions and decision context.'},{n:'Desk research',c:true,w:'Pull in existing research and competitive context quickly.'},{n:'Analytics review',c:false,w:'If behavioral data is relevant to the strategic question.'}], synthesis:[{n:'HMW framing',c:true,w:'Frame opportunity areas to anchor the roadmap conversation.'},{n:'Research readout',c:true,w:'Tight insights presentation to inform planning.'},{n:'Affinity mapping',c:false,w:'Only if enough inputs warrant it.'}] } },
+    medium: { title:'Strategy & roadmap input — discovery-to-strategy', tip:'<strong>Discovery-to-strategy:</strong> Run a focused discovery sprint, synthesize into opportunity areas, and deliver a research-backed strategic brief with journey maps and personas.', phases:{ discovery:[{n:'User interviews',c:true,w:'Ground the strategy in actual user needs.'},{n:'Stakeholder interviews',c:true,w:'Surface competing priorities and org constraints.'},{n:'Analytics review',c:true,w:'Quantify opportunity size for prioritization.'},{n:'Desk research',c:false,w:'Competitive landscape and benchmarks.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Cluster insights into strategic themes.'},{n:'Journey mapping',c:true,w:'Map current and target-state to identify roadmap zones.'},{n:'HMW framing',c:true,w:'Frame each opportunity as a design challenge.'},{n:'Research readout',c:true,w:'Strategic findings for planning stakeholders.'},{n:'Persona development',c:false,w:'Anchor roadmap prioritization decisions.'}], design:[{n:'Design workshops',c:false,w:'Facilitate a strategic design sprint if ideation is in scope.'}] } },
+    open: { title:'Strategy & roadmap input — full strategic research', tip:'<strong>Strategic research programme:</strong> A full-cycle strategy engagement combines user research, competitive analysis, service blueprinting, and stakeholder alignment into a comprehensive strategic brief.', phases:{ discovery:[{n:'User interviews',c:true,w:'Deep qualitative discovery across multiple segments.'},{n:'Stakeholder interviews',c:true,w:'Full org alignment on vision and success criteria.'},{n:'Analytics review',c:true,w:'Behavioral data to quantify and prioritize opportunity.'},{n:'Desk research',c:true,w:'Full competitive, market, and landscape review.'},{n:'Surveys & screeners',c:false,w:'Quantitative validation of strategic hypotheses.'},{n:'Contextual inquiry',c:false,w:'If environmental factors are central to the question.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis from all inputs.'},{n:'Journey mapping',c:true,w:'Current and target-state experience maps.'},{n:'Persona development',c:true,w:'Durable archetypes for strategic alignment.'},{n:'Service blueprinting',c:true,w:'Map the full service system for strategic opportunities.'},{n:'HMW framing',c:true,w:'Frame strategic opportunity areas.'},{n:'Research readout',c:true,w:'Comprehensive strategic brief for executive stakeholders.'}], design:[{n:'Design workshops',c:true,w:'Facilitate cross-functional ideation and prioritization.'}] } },
+  },
+};
+
+/* ═══════════════════════════════════════════════════════
+   SECTION 3: DECISION GUIDE RENDER
+═══════════════════════════════════════════════════════ */
+function runGuide() {
+  const type = document.getElementById('g-type').value;
+  const time = document.getElementById('g-time').value;
+  const research = document.getElementById('g-research').value;
+  const empty = document.getElementById('guide-empty');
+  const result = document.getElementById('guide-result');
+
+  if (!type || !time || !research) { result.classList.remove('visible'); empty.style.display = 'block'; return; }
+
+  const data = GUIDE[type] && GUIDE[type][time];
+  if (!data) { result.classList.remove('visible'); empty.style.display = 'block'; return; }
+
+  empty.style.display = 'none';
+  result.classList.add('visible');
+
+  document.getElementById('guide-title').textContent = data.title;
+  document.getElementById('guide-tip').innerHTML = data.tip;
+
+  let html = '';
+  PHASES.filter(p => data.phases[p] && data.phases[p].length).forEach(phase => {
+    let svcs = data.phases[phase];
+    // Dim discovery if research already done
+    if (phase === 'discovery' && research !== 'none') {
+      svcs = svcs.map(s => ({ ...s, c: research === 'full' ? false : false, w: s.w + (research === 'full' ? ' (existing research may cover this)' : ' (check if existing research covers this)') }));
+    }
+    html += `<div>
+      <p class="guide-phase-label"><i class="fa-solid ${PHASE_ICONS[phase]}"></i> ${PHASE_LABELS[phase]}</p>
+      <div class="guide-svc-grid">`;
+    svcs.forEach(s => {
+      html += `<div class="guide-svc ${s.c ? 'core' : ''}">
+        <i class="fa-solid ${s.c ? 'fa-circle-check' : 'fa-circle'} guide-svc-icon"></i>
+        <div>
+          <p class="guide-svc-name">${s.n}<span class="guide-svc-badge ${s.c ? 'badge-core' : 'badge-opt'}">${s.c ? 'core' : 'optional'}</span></p>
+          <p class="guide-svc-why">${s.w}</p>
+        </div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  document.getElementById('guide-phases').innerHTML = html;
+}
+</script>
+</body>
+</html>
