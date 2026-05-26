@@ -186,7 +186,7 @@ export default function App() {
             color:'rgba(255,255,255,0.8)', background:'transparent',
             border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
             textDecoration:'none', display:'flex', alignItems:'center',
-          }}>HCD Services</a>
+          }}>Product Services</a>
         </div>
       </div>
  
