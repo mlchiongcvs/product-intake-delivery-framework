@@ -174,19 +174,13 @@ export default function App() {
         <h1 style={{ margin:'0 0 4px', fontSize:22, fontWeight:700, color:WH }}>Product Intake & Delivery Framework</h1>
         <p style={{ margin:'0 0 20px', fontSize:13, color:'rgba(255,255,255,0.8)' }}>7-phase end-to-end process · Jira + Confluence as source of truth · Agile SAFe delivery model</p>
         <div style={{ display:'flex' }}>
-          {['Process Flow','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison'].map((t,i) => (
+          {['Process Flow','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison','Product Services'].map((t,i) => (
             <button key={i} onClick={() => setTab(i)} style={{
               padding:'10px 18px', fontSize:13, fontWeight: tab===i ? 700 : 400,
               color: tab===i ? V : 'rgba(255,255,255,0.8)', background: tab===i ? WH : 'transparent',
               border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
             }}>{t}</button>
           ))}
-          <a href={`${import.meta.env.BASE_URL}services.html`} style={{
-            padding:'10px 18px', fontSize:13, fontWeight:400,
-            color:'rgba(255,255,255,0.8)', background:'transparent',
-            border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
-            textDecoration:'none', display:'flex', alignItems:'center',
-          }}>Product Services</a>
         </div>
       </div>
  
@@ -196,6 +190,7 @@ export default function App() {
         {tab===2 && <AtlassianPlaybook jiraCat={jiraCat} setJiraCat={setJiraCat} confOpen={confOpen} setConfOpen={setConfOpen} />}
         {tab===3 && <RitualsView />}
         {tab===4 && <ProcessComparison />}
+        {tab===5 && <ProductServices />}
       </div>
     </div>
   );
@@ -897,4 +892,285 @@ function RitualsView() {
     </div>
   );
 }
- 
+
+/* ═══════════════════════════════════════════════════════
+   PRODUCT SERVICES
+═══════════════════════════════════════════════════════ */
+const PS_SERVICES = [
+  { id:'interviews',  phase:'discovery',      icon:'ti-users',           name:'User interviews',             effort:2, def:'One-on-one structured conversations to surface mental models, pain points, and unmet needs.', example:'Interviewing Medicaid members navigating prior authorization to map where confusion occurs.' },
+  { id:'contextual',  phase:'discovery',      icon:'ti-eye',             name:'Contextual inquiry',          effort:3, def:'Observing users in their natural environment while completing real tasks.', example:'Shadowing care coordinators to document workarounds built into daily workflows.' },
+  { id:'surveys',     phase:'discovery',      icon:'ti-list-check',      name:'Surveys & screeners',         effort:1, def:'Quantitative data collection at scale to validate hypotheses and segment audiences.', example:'Recruiting Aetna members across plan types for a benefits comprehension study.' },
+  { id:'analytics',   phase:'discovery',      icon:'ti-chart-bar',       name:'Analytics review',            effort:1, def:'Interpreting behavioral data to identify drop-off points and usage anomalies.', example:'Pinpointing where members abandon the claims status flow in the portal.' },
+  { id:'desk',        phase:'discovery',      icon:'ti-book',            name:'Desk research',               effort:1, def:'Synthesizing existing research, competitive landscapes, and industry benchmarks.', example:'Benchmarking digital health onboarding flows across major payers.' },
+  { id:'stakeholder', phase:'discovery',      icon:'ti-id-badge-2',      name:'Stakeholder interviews',      effort:1, def:'Structured conversations to surface business goals, constraints, and org context.', example:'Interviewing product and compliance teams before redesigning a regulated benefits page.' },
+  { id:'affinity',    phase:'synthesis',      icon:'ti-layout-columns',  name:'Affinity mapping',            effort:1, def:'Collaborative clustering of research observations into themes to reveal patterns.', example:'Sorting 15 member interview findings into themes around trust and navigation confidence.' },
+  { id:'journey',     phase:'synthesis',      icon:'ti-route',           name:'Journey mapping',             effort:2, def:'Visualizing the end-to-end experience across touchpoints — actions, emotions, and pain points.', example:"Mapping a patient's journey from diagnosis through insurance approval, pharmacy, and follow-up care." },
+  { id:'personas',    phase:'synthesis',      icon:'ti-user-circle',     name:'Persona development',         effort:2, def:'Composite portraits of user archetypes capturing goals, behaviors, and frustrations.', example:'Three member personas (caregiver, chronic condition manager, first-time enrollee) for portal redesign.' },
+  { id:'hmw',         phase:'synthesis',      icon:'ti-target',          name:'HMW framing',                 effort:1, def:'Translating insights into "How might we…" design challenge statements.', example:'How might we help members understand deductible status without calling customer support?' },
+  { id:'blueprint',   phase:'synthesis',      icon:'ti-sitemap',         name:'Service blueprinting',        effort:2, def:'Mapping the full service system — frontstage actions, backstage processes, and gaps.', example:'Blueprinting prior auth workflow to expose disconnects between member, provider, and ops.' },
+  { id:'readout',     phase:'synthesis',      icon:'ti-presentation',    name:'Research readout',            effort:1, def:'Structured presentation of findings and recommendations for executive stakeholders.', example:'20-slide readout translating member research into three priorities for the redesign roadmap.' },
+  { id:'ia',          phase:'design',         icon:'ti-topology-star-3', name:'Information architecture',    effort:2, def:'Structuring content and navigation grounded in user mental models.', example:'Restructuring member portal navigation based on card sort data across 40 members.' },
+  { id:'wireframes',  phase:'design',         icon:'ti-layout',          name:'Wireframing',                 effort:2, def:'Low-to-mid fidelity structural blueprints defining layout and interaction flow.', example:'Wireframes for a 6-step enrollment flow annotated with logic and error states.' },
+  { id:'prototype',   phase:'design',         icon:'ti-device-mobile',   name:'Prototyping',                 effort:3, def:'Interactive simulations used to test with users and communicate intent to developers.', example:'High-fidelity Figma prototype of the redesigned claims tracker, tested with 8 members.' },
+  { id:'visual',      phase:'design',         icon:'ti-palette',         name:'Visual design',               effort:3, def:'Applying brand guidelines and accessibility standards to create polished, trust-building UI.', example:'Final comps for a benefits page following Aetna MLP design system and WCAG 2.1 AA.' },
+  { id:'uxwriting',   phase:'design',         icon:'ti-pencil',          name:'UX writing',                  effort:1, def:'Crafting interface copy — labels, errors, tooltips, CTAs — at appropriate reading level.', example:'Rewriting prior auth status messages to plain language at a 6th-grade reading level.' },
+  { id:'designsys',   phase:'design',         icon:'ti-components',      name:'Design system contribution',  effort:2, def:'Creating or extending reusable components and patterns for scalability and consistency.', example:'Documenting a new "coverage alert" pattern for the Aetna MLP library with all states.' },
+  { id:'modtest',     phase:'testing',        icon:'ti-users-group',     name:'Moderated usability testing', effort:3, def:'Live facilitated sessions where participants complete tasks on prototypes or live products.', example:'8 sessions testing a pharmacy benefits search tool with Medicare members aged 65+.' },
+  { id:'unmod',       phase:'testing',        icon:'ti-player-play',     name:'Unmoderated testing',         effort:2, def:'Remote task-based studies at scale for validating interactions or comparing design variations.', example:'50-participant study comparing two benefits card layouts for comprehension and accuracy.' },
+  { id:'concept',     phase:'testing',        icon:'ti-bulb',            name:'Concept testing',             effort:2, def:'Presenting early ideas to users for feedback before significant design investment.', example:'Testing three approaches to displaying out-of-pocket costs to find the right mental model.' },
+  { id:'a11y',        phase:'testing',        icon:'ti-accessible',      name:'Accessibility audit',         effort:2, def:'Evaluating designs against WCAG 2.1 AA — keyboard nav, screen readers, contrast, errors.', example:'Full A11Y audit of the enrollment flow producing a prioritized remediation list.' },
+  { id:'heuristic',   phase:'testing',        icon:'ti-compass',         name:'Heuristic evaluation',        effort:1, def:'Expert review against established UX principles to rapidly identify usability issues.', example:'Heuristic review of a legacy provider tool ahead of a modernization initiative.' },
+  { id:'cardsort',    phase:'testing',        icon:'ti-cards',           name:'Card sorting & tree testing',  effort:2, def:'IA research methods revealing how users group content and navigate proposed structures.', example:'Tree test of proposed Aetna.com navigation with 80 participants to validate labeling.' },
+  { id:'handoff',     phase:'implementation', icon:'ti-file-text',       name:'Design handoff & specs',      effort:1, def:'Annotated design files and dev-ready documentation that eliminate ambiguity for engineering.', example:'Full Figma handoff package covering all states, breakpoints, and animation specs.' },
+  { id:'dqa',         phase:'implementation', icon:'ti-shield-check',    name:'Design QA',                   effort:2, def:'Reviewing built product against approved designs to catch deviations before production.', example:'Sprint-by-sprint QA across three engineering squads building member onboarding.' },
+  { id:'iterative',   phase:'implementation', icon:'ti-refresh',         name:'Iterative design support',    effort:3, def:'Ongoing design partnership through agile cycles — handling edge cases and design debt.', example:'Embedded design support across a 6-sprint release cycle with a product squad.' },
+  { id:'docs',        phase:'implementation', icon:'ti-book-2',          name:'Documentation & guidelines',  effort:1, def:'Pattern libraries, usage guidelines, and design rationale for team autonomy.', example:'Guidelines for how and when to use the Aetna MLP "alert" component.' },
+  { id:'metrics',     phase:'implementation', icon:'ti-chart-line',      name:'Post-launch measurement',     effort:1, def:'Defining success metrics and reviewing analytics to assess outcomes and guide iteration.', example:'Tracking task completion and CSAT for 90 days post-launch on a redesigned EOB experience.' },
+  { id:'workshops',   phase:'implementation', icon:'ti-users-group',     name:'Design workshops',            effort:1, def:'Facilitated co-creation sessions aligning product, engineering, and business stakeholders.', example:'3-hour design sprint with 12 stakeholders on a cost transparency challenge.' },
+];
+
+const PS_PHASES = ['discovery','synthesis','design','testing','implementation'];
+const PS_PHASE_ICONS = { discovery:'ti-search', synthesis:'ti-chart-dots-3', design:'ti-pencil', testing:'ti-clipboard-check', implementation:'ti-rocket' };
+const PS_PHASE_LABELS = { discovery:'Discovery', synthesis:'Synthesis', design:'Design', testing:'Testing', implementation:'Implementation' };
+const PS_EFFORT_LBL = ['','Low','Medium','High'];
+const PS_PHASE_DESCS = {
+  discovery:'Understand who your users are, what they need, and where the current experience is failing them. We ground every decision in real evidence — not assumptions. This phase defines the problem worth solving.',
+  synthesis:'Transform raw research into clear insight and actionable direction. We make sense of complexity, align teams around a shared understanding of users, and define the strategic opportunity that drives design decisions.',
+  design:'Translate insight into tangible solutions. We move from rough concepts through validated designs — aligning business requirements, user needs, and technical feasibility into experiences that are clear, accessible, and buildable.',
+  testing:'Verify that designs actually work before they ship. We test with real users to surface usability problems, validate design decisions, and give teams the evidence they need to build with confidence.',
+  implementation:'Bridge the gap between design intent and built reality. We partner with engineering and product teams to ensure what gets shipped matches what was designed — and that it continues to perform for users over time.',
+};
+const PS_PHASE_NAMES = { discovery:'Discovery & Research', synthesis:'Synthesis & Strategy', design:'Ideation & Design', testing:'Testing & Validation', implementation:'Implementation Support' };
+
+function psGetDeliverables(id) {
+  const map = {
+    interviews:['Interview guide','Findings report'], contextual:['Field notes','Observation report'],
+    surveys:['Survey instrument','Data summary'], analytics:['Annotated funnel','Insights memo'],
+    desk:['Research brief','Competitive audit'], stakeholder:['Stakeholder map','Goals summary'],
+    affinity:['Affinity diagram','Theme clusters'], journey:['Journey map','Opportunity areas'],
+    personas:['Persona profiles','Need statements'], hmw:['HMW statements','Opportunity brief'],
+    blueprint:['Service blueprint','Gap analysis'], readout:['Slide deck','Executive summary'],
+    ia:['Site map','Navigation model'], wireframes:['Wireframe deck','Flow annotations'],
+    prototype:['Figma prototype','Interaction specs'], visual:['High-fidelity screens','Redlines'],
+    uxwriting:['Copy deck','Content model'], designsys:['Component specs','Usage guidelines'],
+    modtest:['Test plan','Session findings'], unmod:['Task completion data','Clip highlights'],
+    concept:['Concept deck','Preference data'], a11y:['Audit report','Remediation list'],
+    heuristic:['Issue log','Severity ratings'], cardsort:['IA analysis','Findability score'],
+    handoff:['Annotated Figma','Spec sheet'], dqa:['QA log','Annotated screenshots'],
+    iterative:['Updated comps','Decision log'], docs:['Pattern docs','Decision rationale'],
+    metrics:['Metrics framework','Post-launch report'], workshops:['Workshop plan','Outcome summary'],
+  };
+  return map[id] || [];
+}
+
+const PS_GUIDE = {
+  new: {
+    tight: { title:'New feature — tight timeline', tip:'Shortcut strategy: Lead with stakeholder interviews and analytics to rapidly map known terrain. Prototype fast and run a single round of moderated testing before shipping.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Surface goals and constraints fast.'},{n:'Analytics review',c:true,w:'Use existing data instead of time-consuming field research.'},{n:'Desk research',c:false,w:'Pull in if a benchmark already exists.'}], synthesis:[{n:'HMW framing',c:true,w:'Quickly align the team on the design challenge.'},{n:'Affinity mapping',c:false,w:'Only if enough inputs warrant it.'}], design:[{n:'Wireframing',c:true,w:'Move fast to structure before visual polish.'},{n:'Prototyping',c:true,w:'Essential for any user-facing testing.'},{n:'UX writing',c:false,w:'At minimum, review key CTAs and error states.'}], testing:[{n:'Moderated usability testing',c:true,w:'One focused round — 5 participants — before launch.'},{n:'Heuristic evaluation',c:false,w:'A quick expert pass can catch blockers.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Specs prevent costly engineering rework.'},{n:'Design QA',c:false,w:'At minimum, a single pass at feature-complete.'}] } },
+    medium: { title:'New feature — medium timeline', tip:'Balanced approach: Invest upfront in discovery to avoid rework mid-build. Run two rounds of testing — one on wireframes, one on the final prototype.', phases:{ discovery:[{n:'User interviews',c:true,w:'Validate assumptions before designing — talk to at least 6 users.'},{n:'Stakeholder interviews',c:true,w:'Align requirements and constraints from the start.'},{n:'Analytics review',c:true,w:'Identify behavioral patterns in existing data.'},{n:'Surveys & screeners',c:false,w:'Useful for recruiting or quantitative validation.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Cluster interview findings into actionable themes.'},{n:'HMW framing',c:true,w:'Translate themes into design challenge statements.'},{n:'Journey mapping',c:false,w:'Valuable if the feature spans multiple touchpoints.'}], design:[{n:'Wireframing',c:true,w:'Establish structure before visual investment.'},{n:'Prototyping',c:true,w:'Test at mid-fidelity before high-fidelity.'},{n:'Visual design',c:true,w:'Produce production-ready comps.'},{n:'UX writing',c:true,w:'Error states and onboarding copy matter from day one.'}], testing:[{n:'Moderated usability testing',c:true,w:'Two rounds — wireframes and near-final prototype.'},{n:'Accessibility audit',c:true,w:'Catch A11Y issues before engineering builds.'},{n:'Unmoderated testing',c:false,w:'Scale a specific interaction question.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Full annotated Figma with all states and responsive specs.'},{n:'Design QA',c:true,w:'Catch drift between design intent and built output.'},{n:'Post-launch measurement',c:false,w:'Define KPIs now; measure 60–90 days post-launch.'}] } },
+    open: { title:'New feature — full-cycle engagement', tip:'Full investment: Run a proper discovery sprint, synthesize into personas and journey maps, design iteratively, and embed through the build. This is the gold standard.', phases:{ discovery:[{n:'User interviews',c:true,w:'Deep qualitative discovery — 8–12 participants.'},{n:'Contextual inquiry',c:true,w:'Observe users in their real environment.'},{n:'Surveys & screeners',c:true,w:'Quantitative validation at scale.'},{n:'Analytics review',c:true,w:'Triangulate behavioral data with qualitative findings.'},{n:'Desk research',c:true,w:'Competitive benchmarking and literature review.'},{n:'Stakeholder interviews',c:true,w:'Full alignment on goals and constraints.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis sprint from all inputs.'},{n:'Journey mapping',c:true,w:'Map the complete experience across all touchpoints.'},{n:'Persona development',c:true,w:'Create durable user archetypes.'},{n:'HMW framing',c:true,w:'Frame challenges before ideation begins.'},{n:'Research readout',c:true,w:'Present findings before design begins.'}], design:[{n:'Information architecture',c:true,w:'Define navigation from user mental models.'},{n:'Wireframing',c:true,w:'Iterate quickly on structure.'},{n:'Prototyping',c:true,w:'Test multiple fidelity levels.'},{n:'Visual design',c:true,w:'Polished, production-ready comps.'},{n:'UX writing',c:true,w:'Full content strategy for all UI copy.'},{n:'Design system contribution',c:false,w:'Contribute new patterns back to the system.'}], testing:[{n:'Moderated usability testing',c:true,w:'Multiple rounds — concept, wireframe, high-fidelity.'},{n:'Unmoderated testing',c:true,w:'Validate interactions at scale.'},{n:'Concept testing',c:true,w:'Test multiple directions before committing.'},{n:'Accessibility audit',c:true,w:'Full WCAG 2.1 AA audit.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Comprehensive package with all states.'},{n:'Design QA',c:true,w:'Sprint-by-sprint QA.'},{n:'Iterative design support',c:true,w:'Embedded design through all sprints.'},{n:'Post-launch measurement',c:true,w:'Track KPIs for 90 days post-launch.'}] } },
+  },
+  redesign: {
+    tight: { title:'Redesign — tight timeline', tip:'Audit-first: Start with a heuristic evaluation and analytics review to diagnose the current state. Target the highest-impact fixes and validate with a quick usability test.', phases:{ discovery:[{n:'Analytics review',c:true,w:'Understand current performance before redesigning.'},{n:'Stakeholder interviews',c:true,w:'Align on what "better" means.'}], synthesis:[{n:'HMW framing',c:true,w:'Define redesign scope and success criteria.'}], design:[{n:'Wireframing',c:true,w:'Rapid structural changes before visual redesign.'},{n:'Prototyping',c:true,w:'Needed to test the redesigned state.'},{n:'Visual design',c:false,w:'Update only if brand or A11Y compliance requires it.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert pass on current design for clear violations.'},{n:'Moderated usability testing',c:true,w:'Validate the redesign with at least 5 users.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Clean specs for all changed components.'},{n:'Design QA',c:false,w:'At least a single pass at feature-complete.'}] } },
+    medium: { title:'Redesign — medium timeline', tip:'Diagnostic before prescriptive: Invest the first week fully understanding what\'s broken and why before touching any design files.', phases:{ discovery:[{n:'User interviews',c:true,w:'Talk to current users about pain points.'},{n:'Analytics review',c:true,w:'Quantify where and how often failures happen.'},{n:'Stakeholder interviews',c:true,w:'Understand redesign goals and constraints.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Synthesize findings into prioritized themes.'},{n:'Journey mapping',c:true,w:'Map the current experience to identify redesign zones.'},{n:'Research readout',c:false,w:'Brief stakeholder readout before redesign begins.'}], design:[{n:'Wireframing',c:true,w:'Redesign structure before visual changes.'},{n:'Prototyping',c:true,w:'Test the redesigned flow before visual production.'},{n:'Visual design',c:true,w:'Align to brand and accessibility requirements.'},{n:'UX writing',c:false,w:'Audit copy if messaging contributed to failures.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert audit of existing product before redesign.'},{n:'Moderated usability testing',c:true,w:'Compare redesign to current-state baseline.'},{n:'Accessibility audit',c:true,w:'Use the redesign to achieve WCAG 2.1 AA.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Full specs for all changed components.'},{n:'Design QA',c:true,w:'Redesigns are prone to build drift — QA every sprint.'},{n:'Post-launch measurement',c:false,w:'Validate improvement against baseline after launch.'}] } },
+    open: { title:'Redesign — full-cycle engagement', tip:'Full-cycle redesign: A comprehensive redesign warrants its own discovery sprint. Treat it like a new product with user interviews, journey mapping, and concept testing.', phases:{ discovery:[{n:'User interviews',c:true,w:'Full qualitative discovery with current users.'},{n:'Analytics review',c:true,w:'Data-driven diagnosis of current product failures.'},{n:'Stakeholder interviews',c:true,w:'Full alignment on redesign goals and KPIs.'},{n:'Contextual inquiry',c:false,w:'If the current workflow has complex environmental factors.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis from all inputs.'},{n:'Journey mapping',c:true,w:'Document current and target-state experience.'},{n:'Research readout',c:true,w:'Stakeholder readout before direction is set.'}], design:[{n:'Information architecture',c:true,w:'Validate or restructure navigation.'},{n:'Wireframing',c:true,w:'Explore multiple structural directions.'},{n:'Prototyping',c:true,w:'Test at multiple fidelity levels.'},{n:'Visual design',c:true,w:'Full visual redesign.'},{n:'UX writing',c:true,w:'End-to-end copy audit and rewrite.'}], testing:[{n:'Concept testing',c:true,w:'Test multiple redesign directions before committing.'},{n:'Moderated usability testing',c:true,w:'Multiple rounds — baseline, mid, and final.'},{n:'Accessibility audit',c:true,w:'Full WCAG 2.1 AA audit.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Full comprehensive Figma package.'},{n:'Design QA',c:true,w:'Sprint-by-sprint quality review.'},{n:'Iterative design support',c:true,w:'Embedded design through build cycle.'},{n:'Post-launch measurement',c:true,w:'Measure impact against baseline for 90 days.'}] } },
+  },
+  research: {
+    tight: { title:'Research only — rapid insights sprint', tip:'Lean research sprint: Prioritize speed-to-insight. Run a stakeholder alignment session first, then 5–6 focused interviews. Deliver findings as a tight 10-slide readout.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Align on research questions and decision stakes upfront.'},{n:'Surveys & screeners',c:true,w:'Recruit the right participants fast.'},{n:'User interviews',c:true,w:'Primary method — 5–6 focused sessions.'},{n:'Analytics review',c:false,w:'If behavioral data is readily accessible.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Synthesize findings rapidly.'},{n:'HMW framing',c:true,w:'Package findings as design challenges.'},{n:'Research readout',c:true,w:'Tight findings presentation — 10 slides max.'}] } },
+    medium: { title:'Research only — full discovery sprint', tip:'Discovery sprint: Mix qualitative and quantitative methods. Weeks one for recruiting, weeks two–three for research, week four for synthesis and readout.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Define research scope.'},{n:'Surveys & screeners',c:true,w:'Quantitative validation alongside qualitative.'},{n:'User interviews',c:true,w:'Primary method — 8–10 sessions.'},{n:'Analytics review',c:true,w:'Triangulate with behavioral data.'},{n:'Desk research',c:false,w:'Add competitive or academic context.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full collaborative synthesis.'},{n:'HMW framing',c:true,w:'Convert insights into design challenges.'},{n:'Research readout',c:true,w:'Full stakeholder readout with recommendations.'},{n:'Journey mapping',c:false,w:'If research question maps to an end-to-end experience.'},{n:'Persona development',c:false,w:'If archetypes are needed for future design work.'}] } },
+    open: { title:'Research only — strategic research programme', tip:'Multi-method programme: Combine interviews, contextual inquiry, a survey, and analytics. Deliver a comprehensive report plus journey maps and personas.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Thorough alignment on scope and questions.'},{n:'User interviews',c:true,w:'Deep qualitative — 10–15 sessions.'},{n:'Contextual inquiry',c:true,w:'Observe users in natural context.'},{n:'Surveys & screeners',c:true,w:'Quantitative validation at scale.'},{n:'Analytics review',c:true,w:'Full behavioral data analysis.'},{n:'Desk research',c:true,w:'Comprehensive literature and competitive review.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis from all inputs.'},{n:'Journey mapping',c:true,w:'End-to-end map with emotional journey and opportunities.'},{n:'Persona development',c:true,w:'Research-grounded personas for team alignment.'},{n:'HMW framing',c:true,w:'Full opportunity framing.'},{n:'Research readout',c:true,w:'Comprehensive findings report and executive presentation.'},{n:'Service blueprinting',c:false,w:'If research reveals systemic gaps worth documenting.'}] } },
+  },
+  ds: {
+    tight: { title:'Design system — targeted component work', tip:'Component-first: Focus on states, variants, and usage rules for the specific component. Run a heuristic check before building net-new.', phases:{ discovery:[{n:'Desk research',c:true,w:'Audit similar components in the current system.'}], design:[{n:'Wireframing',c:true,w:'Sketch all component states before visual production.'},{n:'Visual design',c:true,w:'Build polished, system-aligned comps.'},{n:'Design system contribution',c:true,w:'The primary deliverable — component spec and guidelines.'},{n:'UX writing',c:false,w:'Document copy guidelines or placeholder patterns.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert review before publishing.'}], implementation:[{n:'Design handoff & specs',c:true,w:'All states, tokens, and interaction specs.'},{n:'Documentation & guidelines',c:true,w:'Usage guidelines for designers consuming the component.'}] } },
+    medium: { title:'Design system — full component or pattern', tip:'Research-informed components: Even design system work benefits from a brief discovery phase to validate how the pattern fits the existing system.', phases:{ discovery:[{n:'Desk research',c:true,w:'Benchmark against comparable design systems.'},{n:'Stakeholder interviews',c:false,w:'Align with engineering on component requirements.'}], design:[{n:'Wireframing',c:true,w:'Explore structural approaches before visual production.'},{n:'Visual design',c:true,w:'Full visual build with all states and variants.'},{n:'Design system contribution',c:true,w:'Complete pattern documentation and library contribution.'},{n:'UX writing',c:true,w:'Copy guidelines and placeholder content standards.'}], testing:[{n:'Heuristic evaluation',c:true,w:'Expert review before publishing.'},{n:'Accessibility audit',c:true,w:'All new components must meet WCAG 2.1 AA.'}], implementation:[{n:'Design handoff & specs',c:true,w:'Engineering-ready spec with tokens and behavior.'},{n:'Documentation & guidelines',c:true,w:'Usage guidelines, do/don\'ts, and code examples.'}] } },
+    open: { title:'Design system — system-wide initiative', tip:'Systemic design investment: A system-wide initiative requires discovery with the designers and engineers who consume the system — they are your users.', phases:{ discovery:[{n:'User interviews',c:true,w:'Interview designers and engineers who use the system.'},{n:'Stakeholder interviews',c:true,w:'Align on governance and contribution model.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Synthesize internal user pain points.'},{n:'Research readout',c:true,w:'Present findings to governance before work begins.'}], design:[{n:'Visual design',c:true,w:'Full visual production for all new/updated components.'},{n:'Design system contribution',c:true,w:'Comprehensive, documented system update.'},{n:'UX writing',c:true,w:'System-wide copy and component guidelines.'}], testing:[{n:'Accessibility audit',c:true,w:'Full WCAG 2.1 AA audit before release.'},{n:'Heuristic evaluation',c:true,w:'Expert evaluation of the system\'s internal UX.'}], implementation:[{n:'Documentation & guidelines',c:true,w:'Comprehensive usage and contribution documentation.'},{n:'Design handoff & specs',c:true,w:'Engineering-ready specs with token references.'},{n:'Design workshops',c:true,w:'Adoption workshops for teams onboarding to the system.'}] } },
+  },
+  strategy: {
+    tight: { title:'Strategy & roadmap input — rapid alignment', tip:'Alignment sprint: Best served by a stakeholder alignment session, synthesis of available research, and a framed set of opportunity areas as a tight presentation.', phases:{ discovery:[{n:'Stakeholder interviews',c:true,w:'Understand the strategic questions and decision context.'},{n:'Desk research',c:true,w:'Pull in existing research and competitive context quickly.'},{n:'Analytics review',c:false,w:'If behavioral data is relevant to the strategic question.'}], synthesis:[{n:'HMW framing',c:true,w:'Frame opportunity areas to anchor the roadmap conversation.'},{n:'Research readout',c:true,w:'Tight insights presentation to inform planning.'},{n:'Affinity mapping',c:false,w:'Only if enough inputs warrant it.'}] } },
+    medium: { title:'Strategy & roadmap input — discovery-to-strategy', tip:'Discovery-to-strategy: Run a focused discovery sprint, synthesize into opportunity areas, and deliver a research-backed strategic brief with journey maps and personas.', phases:{ discovery:[{n:'User interviews',c:true,w:'Ground the strategy in actual user needs.'},{n:'Stakeholder interviews',c:true,w:'Surface competing priorities and org constraints.'},{n:'Analytics review',c:true,w:'Quantify opportunity size for prioritization.'},{n:'Desk research',c:false,w:'Competitive landscape and benchmarks.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Cluster insights into strategic themes.'},{n:'Journey mapping',c:true,w:'Map current and target-state to identify roadmap zones.'},{n:'HMW framing',c:true,w:'Frame each opportunity as a design challenge.'},{n:'Research readout',c:true,w:'Strategic findings for planning stakeholders.'},{n:'Persona development',c:false,w:'Anchor roadmap prioritization decisions.'}], design:[{n:'Design workshops',c:false,w:'Facilitate a strategic design sprint if ideation is in scope.'}] } },
+    open: { title:'Strategy & roadmap input — full strategic research', tip:'Strategic research programme: A full-cycle strategy engagement combines user research, competitive analysis, service blueprinting, and stakeholder alignment into a comprehensive strategic brief.', phases:{ discovery:[{n:'User interviews',c:true,w:'Deep qualitative discovery across multiple segments.'},{n:'Stakeholder interviews',c:true,w:'Full org alignment on vision and success criteria.'},{n:'Analytics review',c:true,w:'Behavioral data to quantify and prioritize opportunity.'},{n:'Desk research',c:true,w:'Full competitive, market, and landscape review.'},{n:'Surveys & screeners',c:false,w:'Quantitative validation of strategic hypotheses.'},{n:'Contextual inquiry',c:false,w:'If environmental factors are central to the question.'}], synthesis:[{n:'Affinity mapping',c:true,w:'Full synthesis from all inputs.'},{n:'Journey mapping',c:true,w:'Current and target-state experience maps.'},{n:'Persona development',c:true,w:'Durable archetypes for strategic alignment.'},{n:'Service blueprinting',c:true,w:'Map the full service system for strategic opportunities.'},{n:'HMW framing',c:true,w:'Frame strategic opportunity areas.'},{n:'Research readout',c:true,w:'Comprehensive strategic brief for executive stakeholders.'}], design:[{n:'Design workshops',c:true,w:'Facilitate cross-functional ideation and prioritization.'}] } },
+  },
+};
+
+function ProductServices() {
+  const [activePhase, setActivePhase] = useState('discovery');
+  const [view, setView] = useState('overview'); // 'overview' | 'guide'
+  const [gType, setGType] = useState('');
+  const [gTime, setGTime] = useState('');
+  const [gResearch, setGResearch] = useState('');
+
+  const guideData = gType && gTime && gResearch && PS_GUIDE[gType] && PS_GUIDE[gType][gTime];
+
+  const phaseServices = PS_SERVICES.filter(s => s.phase === activePhase);
+
+  const F = { border:`1px solid ${G3}`, borderRadius:6, padding:'8px 12px', fontSize:13, color:TX, background:WH, outline:'none', minWidth:175, cursor:'pointer' };
+
+  return (
+    <div>
+      {/* Sub-nav: overview vs guide */}
+      <div style={{ display:'flex', gap:4, marginBottom:20 }}>
+        {[{k:'overview',l:'Services overview'},{k:'guide',l:'Decision guide'}].map(({k,l}) => (
+          <button key={k} onClick={() => setView(k)} style={{
+            padding:'7px 16px', borderRadius:20, fontSize:12.5, fontWeight:500,
+            border:`1px solid ${view===k ? V : G3}`,
+            background: view===k ? V : WH, color: view===k ? WH : TL2,
+            cursor:'pointer', transition:'all 0.15s',
+          }}>{l}</button>
+        ))}
+      </div>
+
+      {view === 'overview' && (
+        <div>
+          <p style={{ margin:'0 0 6px', fontSize:11, fontWeight:500, letterSpacing:'0.1em', textTransform:'uppercase', color:V }}>What we offer</p>
+          <h3 style={{ margin:'0 0 4px', fontSize:18, fontWeight:700, color:TX }}>Product services overview</h3>
+          <p style={{ margin:'0 0 20px', fontSize:13, color:TM, maxWidth:680, lineHeight:1.7 }}>
+            Our practice spans five phases of the product design process.
+            Select a phase below to explore each service, what it delivers, and how it connects to real Aetna Medicaid project contexts.
+          </p>
+
+          {/* Phase tabs */}
+          <div style={{ display:'flex', flexWrap:'wrap', gap:6, marginBottom:20 }}>
+            {PS_PHASES.map((p,i) => (
+              <button key={p} onClick={() => setActivePhase(p)} style={{
+                padding:'7px 16px', borderRadius:20, fontSize:12.5, fontWeight:500,
+                border:`1px solid ${activePhase===p ? V : G3}`,
+                background: activePhase===p ? V : WH, color: activePhase===p ? WH : TL2,
+                cursor:'pointer', transition:'all 0.15s',
+              }}>
+                <i className={`ti ${PS_PHASE_ICONS[p]}`} style={{ marginRight:4 }} aria-hidden="true" />
+                {i+1} · {PS_PHASE_LABELS[p]}
+              </button>
+            ))}
+          </div>
+
+          {/* Phase header */}
+          <div style={{ display:'flex', alignItems:'flex-start', gap:16, padding:'16px 20px', background:VL, borderLeft:`3px solid ${V}`, borderRadius:'0 8px 8px 0', marginBottom:16 }}>
+            <div style={{ width:38, height:38, borderRadius:'50%', background:V, color:WH, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0 }}>
+              <i className={`ti ${PS_PHASE_ICONS[activePhase]}`} aria-hidden="true" />
+            </div>
+            <div>
+              <p style={{ margin:'0 0 4px', fontSize:16, fontWeight:600, color:TX }}>{PS_PHASE_NAMES[activePhase]}</p>
+              <p style={{ margin:0, fontSize:13, color:TM, lineHeight:1.6 }}>{PS_PHASE_DESCS[activePhase]}</p>
+            </div>
+          </div>
+
+          {/* Service cards grid */}
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(280px, 1fr))', gap:14 }}>
+            {phaseServices.map(svc => (
+              <div key={svc.id} style={{ background:WH, border:`1px solid ${G3}`, borderRadius:10, padding:'14px 16px', transition:'border-color 0.15s' }}>
+                <p style={{ margin:'0 0 6px', fontSize:13.5, fontWeight:600, color:TX, display:'flex', alignItems:'center', gap:8 }}>
+                  <i className={`ti ${svc.icon}`} style={{ color:V, fontSize:14 }} aria-hidden="true" /> {svc.name}
+                </p>
+                <p style={{ margin:'0 0 10px', fontSize:12.5, color:TM, lineHeight:1.6 }}>{svc.def}</p>
+                <p style={{ margin:'0 0 4px', fontSize:10, fontWeight:600, letterSpacing:'0.06em', textTransform:'uppercase', color:TL2 }}>Deliverables</p>
+                <div style={{ display:'flex', flexWrap:'wrap', gap:4, marginBottom:8 }}>
+                  {psGetDeliverables(svc.id).map(d => (
+                    <span key={d} style={{ fontSize:11, padding:'2px 9px', borderRadius:10, background:VL, color:VD, border:`1px solid ${V}40` }}>{d}</span>
+                  ))}
+                </div>
+                <p style={{ margin:'0 0 4px', fontSize:10, fontWeight:600, letterSpacing:'0.06em', textTransform:'uppercase', color:TL2 }}>Effort</p>
+                <div style={{ display:'flex', gap:4, marginBottom:8 }}>
+                  <span style={{ fontSize:11, padding:'2px 9px', borderRadius:10, background:G2, color:TL2, border:`1px solid ${G3}` }}>{PS_EFFORT_LBL[svc.effort]}</span>
+                </div>
+                <div style={{ background:G1, borderLeft:`2px solid ${V}60`, borderRadius:'0 6px 6px 0', padding:'8px 10px' }}>
+                  <p style={{ margin:0, fontSize:12, color:TM, lineHeight:1.55 }}><span style={{ fontWeight:500, color:TX }}>Aetna Medicaid example:</span> {svc.example}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {view === 'guide' && (
+        <div>
+          <p style={{ margin:'0 0 6px', fontSize:11, fontWeight:500, letterSpacing:'0.1em', textTransform:'uppercase', color:V }}>Choose your methods</p>
+          <h3 style={{ margin:'0 0 4px', fontSize:18, fontWeight:700, color:TX }}>Service decision guide</h3>
+          <p style={{ margin:'0 0 20px', fontSize:13, color:TM, maxWidth:680, lineHeight:1.7 }}>
+            Select your project scenario to see which product services are recommended — and why.
+            Core services are essential to the engagement; optional services strengthen outcomes where capacity allows.
+          </p>
+
+          {/* Filters */}
+          <div style={{ display:'flex', flexWrap:'wrap', gap:14, marginBottom:24 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+              <label style={{ fontSize:11, fontWeight:600, letterSpacing:'0.06em', textTransform:'uppercase', color:TM }}>Project type</label>
+              <select style={F} value={gType} onChange={e => setGType(e.target.value)}>
+                <option value="">— Select type —</option>
+                <option value="new">New feature / product</option>
+                <option value="redesign">Redesign / optimization</option>
+                <option value="research">Research only</option>
+                <option value="ds">Design system / component</option>
+                <option value="strategy">Strategy & roadmap input</option>
+              </select>
+            </div>
+            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+              <label style={{ fontSize:11, fontWeight:600, letterSpacing:'0.06em', textTransform:'uppercase', color:TM }}>Timeline pressure</label>
+              <select style={F} value={gTime} onChange={e => setGTime(e.target.value)}>
+                <option value="">— Select —</option>
+                <option value="tight">Tight (under 4 weeks)</option>
+                <option value="medium">Medium (4–10 weeks)</option>
+                <option value="open">Open (10+ weeks)</option>
+              </select>
+            </div>
+            <div style={{ display:'flex', flexDirection:'column', gap:5 }}>
+              <label style={{ fontSize:11, fontWeight:600, letterSpacing:'0.06em', textTransform:'uppercase', color:TM }}>Prior research?</label>
+              <select style={F} value={gResearch} onChange={e => setGResearch(e.target.value)}>
+                <option value="">— Select —</option>
+                <option value="none">No prior research</option>
+                <option value="some">Some existing research</option>
+                <option value="full">Full research available</option>
+              </select>
+            </div>
+          </div>
+
+          {!guideData && (
+            <div style={{ textAlign:'center', padding:'3rem', color:TL2, fontSize:14, background:G1, borderRadius:10, border:`1px dashed ${G4}` }}>
+              Select your project type, timeline, and research status above to see service recommendations.
+            </div>
+          )}
+
+          {guideData && (
+            <div>
+              <div style={{ background:VL, borderLeft:`3px solid ${V}`, borderRadius:'0 8px 8px 0', padding:'12px 16px', marginBottom:20 }}>
+                <p style={{ margin:'0 0 4px', fontSize:15, fontWeight:600, color:TX }}>{guideData.title}</p>
+                <p style={{ margin:0, fontSize:13, color:TM, lineHeight:1.65 }}>{guideData.tip}</p>
+              </div>
+              <div style={{ display:'flex', gap:16, flexWrap:'wrap', marginBottom:14 }}>
+                <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, color:TL2 }}><span style={{ width:10, height:10, borderRadius:3, background:V, flexShrink:0 }} /> Core — essential for this scenario</span>
+                <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, color:TL2 }}><span style={{ width:10, height:10, borderRadius:3, background:G2, border:`1px solid ${G4}`, flexShrink:0 }} /> Optional — strengthens if capacity allows</span>
+              </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
+                {PS_PHASES.filter(p => guideData.phases[p] && guideData.phases[p].length).map(phase => {
+                  let svcs = guideData.phases[phase];
+                  if (phase === 'discovery' && gResearch !== 'none') {
+                    svcs = svcs.map(s => ({ ...s, c: false, w: s.w + (gResearch === 'full' ? ' (existing research may cover this)' : ' (check if existing research covers this)') }));
+                  }
+                  return (
+                    <div key={phase}>
+                      <p style={{ margin:'0 0 8px', fontSize:11, fontWeight:600, letterSpacing:'0.06em', textTransform:'uppercase', color:V, display:'flex', alignItems:'center', gap:6 }}>
+                        <i className={`ti ${PS_PHASE_ICONS[phase]}`} aria-hidden="true" /> {PS_PHASE_LABELS[phase]}
+                      </p>
+                      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(220px, 1fr))', gap:8 }}>
+                        {svcs.map((s, i) => (
+                          <div key={i} style={{ display:'flex', alignItems:'flex-start', gap:10, padding:'10px 12px', borderRadius:8, border:`1px solid ${s.c ? V : G3}`, background: s.c ? VL : WH }}>
+                            <i className={`ti ${s.c ? 'ti-circle-check-filled' : 'ti-circle'}`} style={{ color:V, fontSize:14, marginTop:1, flexShrink:0 }} aria-hidden="true" />
+                            <div>
+                              <p style={{ margin:0, fontSize:12.5, fontWeight:600, color:TX, lineHeight:1.3 }}>
+                                {s.n}
+                                <span style={{ display:'inline-block', fontSize:10, padding:'1px 7px', borderRadius:10, marginLeft:4, verticalAlign:'middle', ...(s.c ? { background:V, color:WH } : { background:G2, color:TL2, border:`1px solid ${G3}` }) }}>{s.c ? 'core' : 'optional'}</span>
+                              </p>
+                              <p style={{ margin:'3px 0 0', fontSize:11.5, color:TM, lineHeight:1.45 }}>{s.w}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
