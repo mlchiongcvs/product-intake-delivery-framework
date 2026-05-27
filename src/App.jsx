@@ -170,7 +170,7 @@ export default function App() {
     <div style={{ fontFamily:"'Segoe UI',system-ui,sans-serif", color:TX, background:WH, minHeight:'100vh' }}>
       {/* Logo Bar */}
       <div style={{ background:WH, padding:'20px 48px' }}>
-        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:26 }} />
+        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:21 }} />
       </div>
       {/* Header */}
       <div style={{ background:`linear-gradient(135deg, ${VD} 0%, ${V} 100%)`, padding:'56px 48px 0' }}>
