@@ -168,9 +168,12 @@ export default function App() {
  
   return (
     <div style={{ fontFamily:"'Segoe UI',system-ui,sans-serif", color:TX, background:WH, minHeight:'100vh' }}>
+      {/* Logo Bar */}
+      <div style={{ background:WH, padding:'16px 28px', textAlign:'center', borderBottom:`1px solid ${G3}` }}>
+        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:28 }} />
+      </div>
       {/* Header */}
       <div style={{ background:`linear-gradient(135deg, ${VD} 0%, ${V} 100%)`, padding:'20px 28px 0' }}>
-        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:20, marginBottom:12, filter:'brightness(0) invert(1)' }} />
         <p style={{ margin:'0 0 2px', fontSize:11, color:'rgba(255,255,255,0.7)', letterSpacing:'0.1em', textTransform:'uppercase' }}>Aetna Medicaid Tech Team — Internal</p>
         <h1 style={{ margin:'0 0 4px', fontSize:22, fontWeight:700, color:WH }}>Product Intake & Delivery Framework</h1>
         <p style={{ margin:'0 0 20px', fontSize:13, color:'rgba(255,255,255,0.8)' }}>7-phase end-to-end process · Jira + Confluence as source of truth · Agile SAFe delivery model</p>
