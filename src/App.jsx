@@ -251,11 +251,15 @@ function Landing({ onNavigate }) {
     {/* Contact section */}
     <div style={{ marginTop:48, padding:'28px 32px', background:G1, borderRadius:10, display:'flex', alignItems:'center', gap:20 }}>
       <img src={`${import.meta.env.BASE_URL}jeff-krasner.jpg`} alt="Jeffrey Krasner" style={{ width:48, height:48, borderRadius:'50%', objectFit:'cover', flexShrink:0 }} />
-      <div>
+      <div style={{ flex:1 }}>
         <p style={{ fontSize:13, color:TL2, margin:'0 0 4px' }}>Questions or want to connect with our team?</p>
         <p style={{ fontSize:15, fontWeight:600, color:TX, margin:'0 0 2px' }}>Jeffrey Krasner</p>
         <p style={{ fontSize:13, color:TM, margin:0 }}>Lead Director of Digital Product | AT Medicaid Technology</p>
       </div>
+      <a href="mailto:Jeffrey.Krasner@aetna.com" style={{ display:'flex', alignItems:'center', gap:8, background:V, color:WH, textDecoration:'none', borderRadius:6, padding:'10px 18px', fontSize:13, fontWeight:600, flexShrink:0 }}>
+        <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons/outline/mail.svg" alt="" style={{ width:16, height:16, filter:'brightness(0) invert(1)' }} />
+        Send Email
+      </a>
     </div>
   </div>;
 }
