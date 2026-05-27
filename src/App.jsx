@@ -159,7 +159,7 @@ const FORM_STEPS = [
 ];
  
 export default function App() {
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useState(-1);
   const [expanded, setExpanded] = useState(null);
   const [formStep, setFormStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
@@ -177,18 +177,20 @@ export default function App() {
         <p style={{ margin:'0 0 16px', fontSize:12, color:'rgba(255,255,255,0.6)', letterSpacing:'0.15em', textTransform:'uppercase', fontWeight:400 }}>Aetna Medicaid Tech Team — Internal</p>
         <h1 style={{ margin:'0 0 20px', fontSize:40, fontWeight:300, color:WH, lineHeight:1.15 }}>Product Intake & Delivery Framework</h1>
         <p style={{ margin:'0 0 40px', fontSize:15, color:'rgba(255,255,255,0.75)', lineHeight:1.6, maxWidth:700 }}>7-phase end-to-end process · Jira + Confluence as source of truth · Agile SAFe delivery model</p>
-        <div style={{ borderTop:'1px solid rgba(255,255,255,0.2)', paddingTop:24, marginBottom:0, display:'flex' }}>
-          {['Process Flow','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison','Product Services'].map((t,i) => (
-            <button key={i} onClick={() => setTab(i)} style={{
-              padding:'12px 20px', fontSize:13, fontWeight: tab===i ? 700 : 400,
-              color: tab===i ? V : 'rgba(255,255,255,0.8)', background: tab===i ? WH : 'transparent',
+        <div style={{ borderTop:'1px solid rgba(255,255,255,0.2)', paddingTop:24, marginBottom:0, display:'flex', flexWrap:'wrap' }}>
+          {['Home','Process Flow','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison','Product Services'].map((t,i) => {
+            const idx = i - 1;
+            return <button key={i} onClick={() => setTab(idx)} style={{
+              padding:'12px 20px', fontSize:13, fontWeight: tab===idx ? 700 : 400,
+              color: tab===idx ? V : 'rgba(255,255,255,0.8)', background: tab===idx ? WH : 'transparent',
               border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
-            }}>{t}</button>
-          ))}
+            }}>{t}</button>;
+          })}
         </div>
       </div>
  
-      <div style={{ padding:'24px 28px' }}>
+      <div style={{ padding:'32px 48px' }}>
+        {tab===-1 && <Landing />}
         {tab===0 && <ProcessFlow phases={phases} expanded={expanded} setExpanded={setExpanded} />}
         {tab===1 && <IntakeForm formStep={formStep} setFormStep={setFormStep} submitted={submitted} setSubmitted={setSubmitted} />}
         {tab===2 && <AtlassianPlaybook jiraCat={jiraCat} setJiraCat={setJiraCat} confOpen={confOpen} setConfOpen={setConfOpen} />}
@@ -199,7 +201,40 @@ export default function App() {
     </div>
   );
 }
- 
+
+function Landing() {
+  const benefits = [
+    { title:'Enterprise Value', icon:'building', color:'#2B6CB0',
+      text:'Leveraging enterprise-wide applications allows Medicaid to benefit from economies of scale, access to improved digital & analytics capabilities, and standardized experiences and technical processes.' },
+    { title:'Efficiency', icon:'settings', color:'#2B6CB0',
+      text:'Implementing standardized processes and systems enables teams to leverage cross-LoB synergies when updating and maintaining enterprise applications, reducing the need for creating new onboarding and training materials.' },
+    { title:'Growth', icon:'trending-up', color:'#2B6CB0',
+      text:'Investing in innovative technology and streamlining operations will provide Aetna with a competitive advantage by enabling plans to improve provider experience and coordinated member care, as well as increasing membership through RFP wins and contract retention.' },
+    { title:'Cost Reduction', icon:'receipt-2', color:'#2B6CB0',
+      text:'Moving Aetna Medicaid on to shared operational platforms provides the opportunity to reduce the overall operational run rate, and implementing improved digital & analytics capabilities will increase efficiency and reduce business and IT costs.' },
+  ];
+  return <div>
+    <div style={{ maxWidth:800, marginBottom:40 }}>
+      <h2 style={{ fontSize:28, fontWeight:300, color:TX, margin:'0 0 16px' }}>Welcome</h2>
+      <p style={{ fontSize:15, lineHeight:1.7, color:TM, margin:0 }}>
+        The <strong>Product Intake & Delivery Framework</strong> is Aetna Medicaid's standardized approach to managing product work from initial request through delivery. It supports our broader <strong>product transformation strategy</strong> — migrating to strategic enterprise platforms that unlock value across all Aetna lines of business. This framework ensures every initiative is properly scoped, prioritized, and delivered with full traceability.
+      </p>
+    </div>
+    <h3 style={{ fontSize:13, fontWeight:600, color:TL2, letterSpacing:'0.1em', textTransform:'uppercase', margin:'0 0 20px' }}>Strategic Benefits</h3>
+    <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:20 }}>
+      {benefits.map((b,i) => <div key={i} style={{ background:WH, border:`1px solid ${G3}`, borderRadius:8, overflow:'hidden' }}>
+        <div style={{ background:b.color, padding:'14px 20px' }}>
+          <span style={{ fontSize:16, fontWeight:700, color:WH }}>{b.title}</span>
+        </div>
+        <div style={{ padding:'20px', display:'flex', flexDirection:'column', alignItems:'center' }}>
+          <svg style={{ width:48, height:48, marginBottom:16, color:TX, opacity:0.7 }}><use href={`https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-${b.icon}`}/></svg>
+          <p style={{ fontSize:13, lineHeight:1.6, color:TM, margin:0 }}>{b.text}</p>
+        </div>
+      </div>)}
+    </div>
+  </div>;
+}
+
 function ProcessComparison() {
   const rows = [
     { dim:'Entry paths', old:'2 parallel tracks (Planned / Unplanned) that converge mid-process at different stages', oldTag:'Creates inconsistency', nw:'Single entry point with a 3-way classification step (Planned / Unplanned / Regulatory) at intake', nwTag:'Consistent routing', oldBad:true },
