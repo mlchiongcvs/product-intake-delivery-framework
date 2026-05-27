@@ -169,18 +169,18 @@ export default function App() {
   return (
     <div style={{ fontFamily:"'Segoe UI',system-ui,sans-serif", color:TX, background:WH, minHeight:'100vh' }}>
       {/* Logo Bar */}
-      <div style={{ background:WH, padding:'16px 28px', textAlign:'center', borderBottom:`1px solid ${G3}` }}>
-        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:28 }} />
+      <div style={{ background:WH, padding:'20px 48px', textAlign:'center' }}>
+        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:32 }} />
       </div>
       {/* Header */}
-      <div style={{ background:`linear-gradient(135deg, ${VD} 0%, ${V} 100%)`, padding:'20px 28px 0' }}>
-        <p style={{ margin:'0 0 2px', fontSize:11, color:'rgba(255,255,255,0.7)', letterSpacing:'0.1em', textTransform:'uppercase' }}>Aetna Medicaid Tech Team — Internal</p>
-        <h1 style={{ margin:'0 0 4px', fontSize:22, fontWeight:700, color:WH }}>Product Intake & Delivery Framework</h1>
-        <p style={{ margin:'0 0 20px', fontSize:13, color:'rgba(255,255,255,0.8)' }}>7-phase end-to-end process · Jira + Confluence as source of truth · Agile SAFe delivery model</p>
-        <div style={{ display:'flex' }}>
+      <div style={{ background:`linear-gradient(135deg, ${VD} 0%, ${V} 100%)`, padding:'56px 48px 0' }}>
+        <p style={{ margin:'0 0 16px', fontSize:12, color:'rgba(255,255,255,0.6)', letterSpacing:'0.15em', textTransform:'uppercase', fontWeight:400 }}>Aetna Medicaid Tech Team — Internal</p>
+        <h1 style={{ margin:'0 0 20px', fontSize:40, fontWeight:300, color:WH, lineHeight:1.15 }}>Product Intake & Delivery Framework</h1>
+        <p style={{ margin:'0 0 40px', fontSize:15, color:'rgba(255,255,255,0.75)', lineHeight:1.6, maxWidth:700 }}>7-phase end-to-end process · Jira + Confluence as source of truth · Agile SAFe delivery model</p>
+        <div style={{ borderTop:'1px solid rgba(255,255,255,0.2)', paddingTop:24, marginBottom:0, display:'flex' }}>
           {['Process Flow','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison','Product Services'].map((t,i) => (
             <button key={i} onClick={() => setTab(i)} style={{
-              padding:'10px 18px', fontSize:13, fontWeight: tab===i ? 700 : 400,
+              padding:'12px 20px', fontSize:13, fontWeight: tab===i ? 700 : 400,
               color: tab===i ? V : 'rgba(255,255,255,0.8)', background: tab===i ? WH : 'transparent',
               border:'none', borderRadius:'8px 8px 0 0', cursor:'pointer', transition:'all 0.15s',
             }}>{t}</button>
