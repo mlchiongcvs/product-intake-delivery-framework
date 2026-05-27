@@ -204,13 +204,13 @@ export default function App() {
 
 function Landing({ onNavigate }) {
   const benefits = [
-    { title:'Enterprise Value', icon:'settings-automation',
+    { title:'Enterprise Value', icon:'building-skyscraper',
       text:'Leveraging enterprise-wide applications allows Medicaid to benefit from economies of scale, access to improved digital & analytics capabilities, and standardized experiences and technical processes.' },
-    { title:'Efficiency', icon:'clock-check',
+    { title:'Efficiency', icon:'gauge',
       text:'Implementing standardized processes and systems enables teams to leverage cross-LoB synergies when updating and maintaining enterprise applications, reducing the need for creating new onboarding and training materials.' },
-    { title:'Growth', icon:'chart-arrows-vertical',
+    { title:'Growth', icon:'growth',
       text:'Investing in innovative technology and streamlining operations will provide Aetna with a competitive advantage by enabling plans to improve provider experience and coordinated member care, as well as increasing membership through RFP wins and contract retention.' },
-    { title:'Cost Reduction', icon:'file-dollar',
+    { title:'Cost Reduction', icon:'coins',
       text:'Moving Aetna Medicaid on to shared operational platforms provides the opportunity to reduce the overall operational run rate, and implementing improved digital & analytics capabilities will increase efficiency and reduce business and IT costs.' },
   ];
   return <div>
@@ -224,7 +224,7 @@ function Landing({ onNavigate }) {
       </div>
       <div style={{ background:WH, border:`1px solid ${G3}`, borderRadius:10, padding:'28px 24px' }}>
         <div style={{ width:40, height:40, borderRadius:'50%', background:VL, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
-          <svg style={{ width:20, height:20, color:V }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><use href="https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-clipboard-text"/></svg>
+          <svg style={{ width:20, height:20, color:V }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><use href="https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-send"/></svg>
         </div>
         <h3 style={{ fontSize:16, fontWeight:600, color:TX, margin:'0 0 8px' }}>Ready to get started?</h3>
         <p style={{ fontSize:13, lineHeight:1.6, color:TM, margin:'0 0 20px' }}>Submit a product intake request to kick off your project. Our team will triage and route it within 3 business days.</p>
@@ -250,9 +250,7 @@ function Landing({ onNavigate }) {
 
     {/* Contact section */}
     <div style={{ marginTop:48, padding:'28px 32px', background:G1, borderRadius:10, display:'flex', alignItems:'center', gap:20 }}>
-      <div style={{ width:48, height:48, borderRadius:'50%', background:V, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-        <svg style={{ width:22, height:22, color:WH }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><use href="https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-user"/></svg>
-      </div>
+      <img src={`${import.meta.env.BASE_URL}jeff-krasner.jpg`} alt="Jeffrey Krasner" style={{ width:48, height:48, borderRadius:'50%', objectFit:'cover', flexShrink:0 }} />
       <div>
         <p style={{ fontSize:13, color:TL2, margin:'0 0 4px' }}>Questions or want to connect with our team?</p>
         <p style={{ fontSize:15, fontWeight:600, color:TX, margin:'0 0 2px' }}>Jeffrey Krasner</p>
