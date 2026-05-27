@@ -204,13 +204,13 @@ export default function App() {
 
 function Landing() {
   const benefits = [
-    { title:'Enterprise Value', icon:'building', color:'#2B6CB0',
+    { title:'Enterprise Value', icon:'settings-automation',
       text:'Leveraging enterprise-wide applications allows Medicaid to benefit from economies of scale, access to improved digital & analytics capabilities, and standardized experiences and technical processes.' },
-    { title:'Efficiency', icon:'settings', color:'#2B6CB0',
+    { title:'Efficiency', icon:'clock-check',
       text:'Implementing standardized processes and systems enables teams to leverage cross-LoB synergies when updating and maintaining enterprise applications, reducing the need for creating new onboarding and training materials.' },
-    { title:'Growth', icon:'trending-up', color:'#2B6CB0',
+    { title:'Growth', icon:'chart-arrows-vertical',
       text:'Investing in innovative technology and streamlining operations will provide Aetna with a competitive advantage by enabling plans to improve provider experience and coordinated member care, as well as increasing membership through RFP wins and contract retention.' },
-    { title:'Cost Reduction', icon:'receipt-2', color:'#2B6CB0',
+    { title:'Cost Reduction', icon:'file-dollar',
       text:'Moving Aetna Medicaid on to shared operational platforms provides the opportunity to reduce the overall operational run rate, and implementing improved digital & analytics capabilities will increase efficiency and reduce business and IT costs.' },
   ];
   return <div>
@@ -223,12 +223,14 @@ function Landing() {
     <h3 style={{ fontSize:13, fontWeight:600, color:TL2, letterSpacing:'0.1em', textTransform:'uppercase', margin:'0 0 20px' }}>Strategic Benefits</h3>
     <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:20 }}>
       {benefits.map((b,i) => <div key={i} style={{ background:WH, border:`1px solid ${G3}`, borderRadius:8, overflow:'hidden' }}>
-        <div style={{ background:b.color, padding:'14px 20px' }}>
-          <span style={{ fontSize:16, fontWeight:700, color:WH }}>{b.title}</span>
+        <div style={{ background:'#2B6CB0', padding:'14px 20px' }}>
+          <span style={{ fontSize:15, fontWeight:700, color:WH }}>{b.title}</span>
         </div>
-        <div style={{ padding:'20px', display:'flex', flexDirection:'column', alignItems:'center' }}>
-          <svg style={{ width:48, height:48, marginBottom:16, color:TX, opacity:0.7 }}><use href={`https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-${b.icon}`}/></svg>
-          <p style={{ fontSize:13, lineHeight:1.6, color:TM, margin:0 }}>{b.text}</p>
+        <div style={{ padding:'24px 20px' }}>
+          <div style={{ width:56, height:56, borderRadius:'50%', background:G1, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
+            <svg style={{ width:28, height:28, color:TX }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><use href={`https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-${b.icon}`}/></svg>
+          </div>
+          <p style={{ fontSize:13, lineHeight:1.7, color:TM, margin:0 }}>{b.text}</p>
         </div>
       </div>)}
     </div>
