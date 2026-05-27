@@ -178,7 +178,7 @@ export default function App() {
         <h1 style={{ margin:'0 0 20px', fontSize:40, fontWeight:300, color:WH, lineHeight:1.15 }}>Product Intake & Delivery Framework</h1>
         <p style={{ margin:'0 0 40px', fontSize:15, color:'rgba(255,255,255,0.75)', lineHeight:1.6, maxWidth:700 }}>7-phase end-to-end process · Jira + Confluence as source of truth · Agile SAFe delivery model</p>
         <div style={{ borderTop:'1px solid rgba(255,255,255,0.2)', paddingTop:24, marginBottom:0, display:'flex', flexWrap:'wrap' }}>
-          {['Home','Process Flow','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison','Product Services'].map((t,i) => {
+          {['Home','Process Flow','Product Services','Intake Form','Atlassian Playbook','Agile Rituals','Process Comparison'].map((t,i) => {
             const idx = i - 1;
             return <button key={i} onClick={() => setTab(idx)} style={{
               padding:'12px 20px', fontSize:13, fontWeight: tab===idx ? 700 : 400,
@@ -192,11 +192,11 @@ export default function App() {
       <div style={{ padding:'32px 48px' }}>
         {tab===-1 && <Landing onNavigate={setTab} />}
         {tab===0 && <ProcessFlow phases={phases} expanded={expanded} setExpanded={setExpanded} />}
-        {tab===1 && <IntakeForm formStep={formStep} setFormStep={setFormStep} submitted={submitted} setSubmitted={setSubmitted} />}
-        {tab===2 && <AtlassianPlaybook jiraCat={jiraCat} setJiraCat={setJiraCat} confOpen={confOpen} setConfOpen={setConfOpen} />}
-        {tab===3 && <RitualsView />}
-        {tab===4 && <ProcessComparison />}
-        {tab===5 && <ProductServices />}
+        {tab===1 && <ProductServices />}
+        {tab===2 && <IntakeForm formStep={formStep} setFormStep={setFormStep} submitted={submitted} setSubmitted={setSubmitted} />}
+        {tab===3 && <AtlassianPlaybook jiraCat={jiraCat} setJiraCat={setJiraCat} confOpen={confOpen} setConfOpen={setConfOpen} />}
+        {tab===4 && <RitualsView />}
+        {tab===5 && <ProcessComparison />}
       </div>
     </div>
   );
@@ -228,7 +228,7 @@ function Landing({ onNavigate }) {
         </div>
         <h3 style={{ fontSize:16, fontWeight:600, color:TX, margin:'0 0 8px' }}>Ready to get started?</h3>
         <p style={{ fontSize:13, lineHeight:1.6, color:TM, margin:'0 0 20px' }}>Submit a product intake request to kick off your project. Our team will triage and route it within 3 business days.</p>
-        <button onClick={() => onNavigate(1)} style={{ background:V, color:WH, border:'none', borderRadius:6, padding:'10px 20px', fontSize:13, fontWeight:600, cursor:'pointer' }}>Open Intake Form</button>
+        <button onClick={() => onNavigate(2)} style={{ background:V, color:WH, border:'none', borderRadius:6, padding:'10px 20px', fontSize:13, fontWeight:600, cursor:'pointer' }}>Open Intake Form</button>
       </div>
     </div>
 
