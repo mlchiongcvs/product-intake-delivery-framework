@@ -169,8 +169,8 @@ export default function App() {
   return (
     <div style={{ fontFamily:"'Segoe UI',system-ui,sans-serif", color:TX, background:WH, minHeight:'100vh' }}>
       {/* Logo Bar */}
-      <div style={{ background:WH, padding:'20px 48px', textAlign:'center' }}>
-        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:32 }} />
+      <div style={{ background:WH, padding:'20px 48px' }}>
+        <img src={`${import.meta.env.BASE_URL}aetna-logo.svg`} alt="Aetna" style={{ height:26 }} />
       </div>
       {/* Header */}
       <div style={{ background:`linear-gradient(135deg, ${VD} 0%, ${V} 100%)`, padding:'56px 48px 0' }}>
