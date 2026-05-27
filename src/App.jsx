@@ -224,7 +224,7 @@ function Landing({ onNavigate }) {
       </div>
       <div style={{ background:WH, border:`1px solid ${G3}`, borderRadius:10, padding:'28px 24px' }}>
         <div style={{ width:40, height:40, borderRadius:'50%', background:VL, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
-          <svg style={{ width:20, height:20, color:V }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><use href="https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-send"/></svg>
+          <img src="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons/outline/send.svg" alt="" style={{ width:20, height:20 }} />
         </div>
         <h3 style={{ fontSize:16, fontWeight:600, color:TX, margin:'0 0 8px' }}>Ready to get started?</h3>
         <p style={{ fontSize:13, lineHeight:1.6, color:TM, margin:'0 0 20px' }}>Submit a product intake request to kick off your project. Our team will triage and route it within 3 business days.</p>
@@ -241,7 +241,7 @@ function Landing({ onNavigate }) {
         </div>
         <div style={{ padding:'24px 20px' }}>
           <div style={{ width:56, height:56, borderRadius:'50%', background:G1, display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
-            <svg style={{ width:28, height:28, color:TX }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><use href={`https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-${b.icon}`}/></svg>
+            <img src={`https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons/outline/${b.icon}.svg`} alt="" style={{ width:28, height:28 }} />
           </div>
           <p style={{ fontSize:13, lineHeight:1.7, color:TM, margin:0 }}>{b.text}</p>
         </div>
