@@ -190,7 +190,7 @@ export default function App() {
       </div>
  
       <div style={{ padding:'32px 48px' }}>
-        {tab===-1 && <Landing />}
+        {tab===-1 && <Landing onNavigate={setTab} />}
         {tab===0 && <ProcessFlow phases={phases} expanded={expanded} setExpanded={setExpanded} />}
         {tab===1 && <IntakeForm formStep={formStep} setFormStep={setFormStep} submitted={submitted} setSubmitted={setSubmitted} />}
         {tab===2 && <AtlassianPlaybook jiraCat={jiraCat} setJiraCat={setJiraCat} confOpen={confOpen} setConfOpen={setConfOpen} />}
@@ -202,7 +202,7 @@ export default function App() {
   );
 }
 
-function Landing() {
+function Landing({ onNavigate }) {
   const benefits = [
     { title:'Enterprise Value', icon:'settings-automation',
       text:'Leveraging enterprise-wide applications allows Medicaid to benefit from economies of scale, access to improved digital & analytics capabilities, and standardized experiences and technical processes.' },
@@ -214,12 +214,25 @@ function Landing() {
       text:'Moving Aetna Medicaid on to shared operational platforms provides the opportunity to reduce the overall operational run rate, and implementing improved digital & analytics capabilities will increase efficiency and reduce business and IT costs.' },
   ];
   return <div>
-    <div style={{ maxWidth:800, marginBottom:40 }}>
-      <h2 style={{ fontSize:28, fontWeight:300, color:TX, margin:'0 0 16px' }}>Welcome</h2>
-      <p style={{ fontSize:15, lineHeight:1.7, color:TM, margin:0 }}>
-        The <strong>Product Intake & Delivery Framework</strong> is Aetna Medicaid's standardized approach to managing product work from initial request through delivery. It supports our broader <strong>product transformation strategy</strong> — migrating to strategic enterprise platforms that unlock value across all Aetna lines of business. This framework ensures every initiative is properly scoped, prioritized, and delivered with full traceability.
-      </p>
+    {/* Welcome + CTA row */}
+    <div style={{ display:'grid', gridTemplateColumns:'1fr 320px', gap:32, marginBottom:40, alignItems:'start' }}>
+      <div>
+        <h2 style={{ fontSize:28, fontWeight:300, color:TX, margin:'0 0 16px' }}>Welcome</h2>
+        <p style={{ fontSize:15, lineHeight:1.7, color:TM, margin:0 }}>
+          The <strong>Product Intake & Delivery Framework</strong> is Aetna Medicaid's standardized approach to managing product work from initial request through delivery. It supports our broader <strong>product transformation strategy</strong> — migrating to strategic enterprise platforms that unlock value across all Aetna lines of business. This framework ensures every initiative is properly scoped, prioritized, and delivered with full traceability.
+        </p>
+      </div>
+      <div style={{ background:`linear-gradient(135deg, ${VD} 0%, ${V} 100%)`, borderRadius:10, padding:'28px 24px' }}>
+        <div style={{ width:40, height:40, borderRadius:'50%', background:'rgba(255,255,255,0.15)', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:16 }}>
+          <svg style={{ width:20, height:20, color:WH }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><use href="https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-rocket"/></svg>
+        </div>
+        <h3 style={{ fontSize:16, fontWeight:700, color:WH, margin:'0 0 8px' }}>Ready to get started?</h3>
+        <p style={{ fontSize:13, lineHeight:1.6, color:'rgba(255,255,255,0.8)', margin:'0 0 20px' }}>Submit a product intake request to kick off your project. Our team will triage and route it within 3 business days.</p>
+        <button onClick={() => onNavigate(1)} style={{ background:WH, color:V, border:'none', borderRadius:6, padding:'10px 20px', fontSize:13, fontWeight:700, cursor:'pointer' }}>Open Intake Form</button>
+      </div>
     </div>
+
+    {/* Strategic Benefits */}
     <h3 style={{ fontSize:13, fontWeight:600, color:TL2, letterSpacing:'0.1em', textTransform:'uppercase', margin:'0 0 20px' }}>Strategic Benefits</h3>
     <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:20 }}>
       {benefits.map((b,i) => <div key={i} style={{ background:WH, border:`1px solid ${G3}`, borderRadius:8, overflow:'hidden' }}>
@@ -233,6 +246,18 @@ function Landing() {
           <p style={{ fontSize:13, lineHeight:1.7, color:TM, margin:0 }}>{b.text}</p>
         </div>
       </div>)}
+    </div>
+
+    {/* Contact section */}
+    <div style={{ marginTop:48, padding:'28px 32px', background:G1, borderRadius:10, display:'flex', alignItems:'center', gap:20 }}>
+      <div style={{ width:48, height:48, borderRadius:'50%', background:V, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+        <svg style={{ width:22, height:22, color:WH }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><use href="https://cdn.jsdelivr.net/npm/@tabler/icons-sprite@latest/dist/tabler-sprite.svg#tabler-user"/></svg>
+      </div>
+      <div>
+        <p style={{ fontSize:13, color:TL2, margin:'0 0 4px' }}>Questions or want to connect with our team?</p>
+        <p style={{ fontSize:15, fontWeight:600, color:TX, margin:'0 0 2px' }}>Jeffrey Krasner</p>
+        <p style={{ fontSize:13, color:TM, margin:0 }}>Lead Director of Digital Product | AT Medicaid Technology</p>
+      </div>
     </div>
   </div>;
 }
